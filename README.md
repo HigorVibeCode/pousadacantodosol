@@ -13,7 +13,9 @@ npm run preview   # serve dist/
 
 ## Publicar na Vercel
 
-1. Importar este repositório na Vercel. O framework é detectado como Astro.
+[![Importar na Vercel](https://vercel.com/button)](https://vercel.com/new/import?s=https%3A%2F%2Fgithub.com%2FHigorVibeCode%2Fpousadacantodosol)
+
+1. Importar este repositório na Vercel (botão acima). O framework é detectado como Astro.
 2. **Banco de dados:** no projeto, aba *Storage → Create Database → Neon (Postgres)*, plano gratuito. A Vercel injeta `DATABASE_URL` sozinha. Sem isso o motor roda em memória e as reservas somem a cada reinício.
 3. Em *Environment Variables*, copiar as chaves de `.env.example`:
    - `PUBLIC_SITE_URL`: a URL provisória da Vercel (ex.: `https://pousada-orla-do-sol.vercel.app`).
