@@ -8,7 +8,7 @@ export const pousada = {
   shortName: 'Orla do Sol',
   tagline: 'Pousada em Prado a 2 minutos a pé da Praia Novo Prado',
   description:
-    'Pousada familiar em Prado, Bahia, a 2 minutos a pé da Praia Novo Prado. 18 apartamentos com ar-condicionado e varanda, piscina, café da manhã incluso e estacionamento gratuito.',
+    'Pousada familiar em Prado, Bahia, a 2 minutos a pé da Praia Novo Prado. 18 apartamentos com ar-condicionado, com ou sem varanda, piscina, café da manhã incluso e estacionamento gratuito.',
   roomsTotal: 18,
   checkIn: '15:00',
   checkOut: '11:00',
@@ -43,7 +43,7 @@ export const pousada = {
     'Recepção 24 horas',
     'Wi-Fi gratuito',
     'Ar-condicionado em todos os quartos',
-    'Varanda nos apartamentos',
+    'Varanda em parte dos apartamentos',
     'Jardim e área de convivência',
     'Bar e lanchonete',
   ],
@@ -65,6 +65,7 @@ export const pousada = {
 
 export const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://pousada-orla-do-sol.vercel.app';
 export const gtmId: string = import.meta.env.PUBLIC_GTM_ID || '';
-export const bookingMode: 'whatsapp' | 'engine' =
-  import.meta.env.PUBLIC_BOOKING_MODE === 'engine' ? 'engine' : 'whatsapp';
+export type BookingMode = 'interno' | 'whatsapp' | 'engine';
+const m = import.meta.env.PUBLIC_BOOKING_MODE;
+export const bookingMode: BookingMode = m === 'whatsapp' || m === 'engine' ? m : 'interno';
 export const bookingEngineUrl: string = import.meta.env.PUBLIC_BOOKING_ENGINE_URL || '';

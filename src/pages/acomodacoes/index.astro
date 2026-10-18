@@ -2,36 +2,36 @@
 import Base from '../../layouts/Base.astro';
 import RoomCard from '../../components/RoomCard.astro';
 import BookingBar from '../../components/BookingBar.astro';
-import { rooms } from '../../data/rooms';
+import { rooms, priceFrom } from '../../data/rooms';
 import { pousada } from '../../data/pousada';
 ---
-<Base title="Acomodações" description={`Quartos da ${pousada.name} em Prado, BA: duplo, triplo, quádruplo e conjugado, todos com ar-condicionado e varanda. Café da manhã incluso.`}>
+<Base title="Acomodações" description={`Apartamentos da ${pousada.name} em Prado, BA, com e sem varanda, para 1 a 4 pessoas, ar-condicionado e café da manhã incluso.`}>
   <section class="container-site pt-12 md:pt-16">
     <p class="eyebrow">Acomodações</p>
-    <h1 class="mt-2 max-w-3xl text-4xl font-extrabold md:text-5xl">{pousada.roomsTotal} apartamentos com varanda e ar-condicionado</h1>
-    <p class="mt-4 max-w-2xl text-lg text-mar/80">Todas as categorias incluem café da manhã, estacionamento e piscina. Escolha pelo número de pessoas e pela cama.</p>
+    <h1 class="mt-2 max-w-3xl text-4xl font-extrabold md:text-5xl">{pousada.roomsTotal} apartamentos, com ou sem varanda</h1>
+    <p class="mt-4 max-w-2xl text-lg text-mar/80">O preço cobre 1 ou 2 pessoas com café da manhã, estacionamento e piscina. Crianças e acompanhantes entram como cama extra: R$ 50 por noite até 6 anos, R$ 130 acima disso.</p>
     <div class="mt-8"><BookingBar /></div>
   </section>
   <section class="container-site mt-12">
     <div class="overflow-x-auto rounded-[var(--radius-ficha)] border border-mar/10 bg-white">
       <table class="w-full min-w-[560px] text-left text-sm">
         <thead class="bg-espuma text-xs uppercase tracking-wider text-neblina">
-          <tr><th class="px-5 py-3">Categoria</th><th class="px-5 py-3">Pessoas</th><th class="px-5 py-3">Camas</th><th class="px-5 py-3">Ideal para</th><th class="px-5 py-3 text-right">Diária</th></tr>
+          <tr><th class="px-5 py-3">Apartamento</th><th class="px-5 py-3">Pessoas</th><th class="px-5 py-3">Camas</th><th class="px-5 py-3">Ideal para</th><th class="px-5 py-3 text-right">Diária para 2</th></tr>
         </thead>
         <tbody class="divide-y divide-mar/10">
           {rooms.map((r) => (
             <tr>
               <td class="px-5 py-3 font-semibold"><a href={`/acomodacoes/${r.slug}`} class="underline-offset-4 hover:underline">{r.name}</a></td>
-              <td class="px-5 py-3">até {r.capacity.total}</td>
+              <td class="px-5 py-3">{r.baseOccupancy} (até {r.maxOccupancy} com extra)</td>
               <td class="px-5 py-3">{r.beds}</td>
               <td class="px-5 py-3 text-mar/80">{r.ideal}</td>
-              <td class="px-5 py-3 text-right font-semibold text-mar-claro">{r.priceFrom ? `R$ ${r.priceFrom}` : 'Consultar'}</td>
+              <td class="px-5 py-3 text-right font-semibold text-mar-claro">{priceFrom(r) ? `a partir de R$ ${priceFrom(r)}` : 'Consultar'}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-    <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:max-w-3xl">
       {rooms.map((r) => <li><RoomCard room={r} /></li>)}
     </ul>
   </section>

@@ -11,7 +11,7 @@ export const faq: Faq[] = [
   },
   {
     q: 'O café da manhã está incluso?',
-    a: 'Sim. O café da manhã está incluso em todas as diárias e é servido todos os dias.',
+    a: 'Sim. O café da manhã está incluso para os hóspedes do apartamento e é servido todos os dias. Visita ou hóspede extra fora da reserva paga R$ 30.',
   },
   {
     q: 'Tem estacionamento?',
@@ -19,7 +19,15 @@ export const faq: Faq[] = [
   },
   {
     q: 'Crianças pagam?',
-    a: 'Consulte a política para a idade das crianças ao pedir a cotação pelo WhatsApp. Informe a idade e respondemos com o valor exato.',
+    a: 'O preço do apartamento cobre 2 pessoas. Criança até 6 anos entra como cama extra por R$ 50 a noite; acima de 6 anos, e também um terceiro adulto, R$ 130 a noite. O café da manhã está incluso para todos os hóspedes.',
+  },
+  {
+    q: 'Tem taxa de serviço?',
+    a: 'Não. Não cobramos os 10% de taxa de serviço. O valor que aparece na reserva é o valor que você paga.',
+  },
+  {
+    q: 'Ano Novo e Carnaval têm pacote?',
+    a: 'Sim. Nessas datas a hospedagem é vendida em pacotes de 4 ou 5 noites, com diária mais baixa no pacote de 5. O site já calcula o pacote certo ao escolher as datas.',
   },
   {
     q: 'Aceita pets?',

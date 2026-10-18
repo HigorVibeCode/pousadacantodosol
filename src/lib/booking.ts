@@ -1,9 +1,10 @@
 /**
  * Lógica do botão principal. Roda no navegador.
- * Fase 1: monta a mensagem de WhatsApp com datas, hóspedes e categoria.
- * Fase 2: troca PUBLIC_BOOKING_MODE para "engine" e o mesmo formulário abre o motor.
+ * interno: abre /reservar com datas e hóspedes (motor próprio).
+ * whatsapp: monta a mensagem de WhatsApp com datas, hóspedes e categoria.
+ * engine: abre o motor de um fornecedor externo com os parâmetros.
  */
-type Cfg = { whatsapp: string; mode: 'whatsapp' | 'engine'; engineUrl: string };
+type Cfg = { whatsapp: string; mode: 'interno' | 'whatsapp' | 'engine'; engineUrl: string };
 
 const KEY = 'ods:busca';
 const fmt = (iso: string) => {
@@ -30,7 +31,8 @@ export function initBooking(form: HTMLFormElement, cfg: Cfg) {
   const ci = form.querySelector<HTMLInputElement>('[name=checkin]')!;
   const co = form.querySelector<HTMLInputElement>('[name=checkout]')!;
   const ad = form.querySelector<HTMLSelectElement>('[name=adults]')!;
-  const ch = form.querySelector<HTMLSelectElement>('[name=children]')!;
+  const k6 = form.querySelector<HTMLSelectElement>('[name=kids6]')!;
+  const k7 = form.querySelector<HTMLSelectElement>('[name=kids7]')!;
   const room = form.querySelector<HTMLInputElement>('[name=room]');
   const out = form.querySelector<HTMLElement>('[data-noites]');
   const err = form.querySelector<HTMLElement>('[data-erro]');
@@ -46,7 +48,8 @@ export function initBooking(form: HTMLFormElement, cfg: Cfg) {
     if (prev.checkin >= ci.min) ci.value = prev.checkin;
     if (prev.checkout > ci.value) co.value = prev.checkout;
     if (prev.adults) ad.value = prev.adults;
-    if (prev.children) ch.value = prev.children;
+    if (prev.kids6) k6.value = prev.kids6;
+    if (prev.kids7) k7.value = prev.kids7;
   }
 
   const refresh = () => {
@@ -72,22 +75,29 @@ export function initBooking(form: HTMLFormElement, cfg: Cfg) {
       (!ci.value ? ci : co).focus();
       return;
     }
-    const sel = { checkin: ci.value, checkout: co.value, adults: ad.value, children: ch.value };
+    const sel = { checkin: ci.value, checkout: co.value, adults: ad.value, kids6: k6.value, kids7: k7.value };
     save(sel);
     const n = nights(ci.value, co.value);
     const roomName = room?.value || '';
-    track('reserva_clique', { modo: cfg.mode, noites: n, adultos: ad.value, criancas: ch.value, categoria: roomName || 'qualquer' });
+    track('reserva_clique', { modo: cfg.mode, noites: n, adultos: ad.value, criancas: String(+k6.value + +k7.value), categoria: roomName || 'qualquer' });
 
+    if (cfg.mode === 'interno') {
+      const p = new URLSearchParams({ checkin: ci.value, checkout: co.value, adults: ad.value, kids6: k6.value, kids7: k7.value });
+      if (roomName && room?.dataset.slug) p.set('room', room.dataset.slug);
+      window.location.href = `/reservar?${p}`;
+      return;
+    }
     if (cfg.mode === 'engine' && cfg.engineUrl) {
       const url = cfg.engineUrl
         .replace('{checkin}', ci.value).replace('{checkout}', co.value)
-        .replace('{adults}', ad.value).replace('{children}', ch.value);
+        .replace('{adults}', ad.value).replace('{children}', String(+k6.value + +k7.value));
       window.open(url, '_blank', 'noopener');
       return;
     }
 
     const hosp = [`${ad.value} ${ad.value === '1' ? 'adulto' : 'adultos'}`];
-    if (ch.value !== '0') hosp.push(`${ch.value} ${ch.value === '1' ? 'criança' : 'crianças'}`);
+    if (k6.value !== '0') hosp.push(`${k6.value} criança(s) até 6 anos`);
+    if (k7.value !== '0') hosp.push(`${k7.value} criança(s) de 7 a 12`);
     const linhas = [
       `Olá! Quero reservar na Pousada Orla do Sol.`,
       `Chegada: ${fmt(ci.value)} · Saída: ${fmt(co.value)} (${n} ${n === 1 ? 'noite' : 'noites'})`,

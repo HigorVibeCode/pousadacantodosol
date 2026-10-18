@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import { adminEnabled } from '../../lib/admin';
+export const prerender = false;
+const erro = Astro.url.searchParams.get('erro');
+const next = Astro.url.searchParams.get('next') || '/admin';
+---
+<Base title="Painel" noSticky noindex>
+  <section class="container-site max-w-sm pt-16">
+    <p class="eyebrow">Painel da pousada</p>
+    <h1 class="mt-2 text-3xl font-extrabold">Entrar</h1>
+    {!adminEnabled() ? (
+      <p class="mt-4 rounded-lg bg-falesia/10 px-3 py-2 text-sm text-falesia">O painel está desativado: defina a variável <code>ADMIN_PASSWORD</code> na Vercel.</p>
+    ) : (
+      <form method="post" action="/api/admin/login" class="ficha mt-6 p-5">
+        {erro && <p class="mb-3 rounded-lg bg-falesia/10 px-3 py-2 text-sm text-falesia">Senha incorreta.</p>}
+        <input type="hidden" name="next" value={next} />
+        <label class="rotulo" for="password">Senha</label>
+        <input class="campo" id="password" name="password" type="password" required autofocus />
+        <button type="submit" class="btn-mar mt-4 w-full">Entrar</button>
+      </form>
+    )}
+  </section>
+</Base>

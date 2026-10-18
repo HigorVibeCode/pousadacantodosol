@@ -4,15 +4,16 @@ import { rooms } from '../data/rooms';
 interface Props {
   /** nome da categoria pré-selecionada (página de quarto) */
   room?: string;
+  roomSlug?: string;
   compact?: boolean;
   id?: string;
 }
-const { room = '', compact = false, id = 'reservar' } = Astro.props;
+const { room = '', roomSlug = '', compact = false, id = 'reservar' } = Astro.props;
 const cfg = { whatsapp: pousada.whatsapp, mode: bookingMode, engineUrl: bookingEngineUrl };
 ---
 <form id={id} class:list={['ficha p-4 sm:p-5 scroll-mt-24', compact ? '' : 'md:p-6']} data-booking data-cfg={JSON.stringify(cfg)} novalidate>
-  <div class:list={['grid gap-3', compact ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-[1fr_1fr_0.8fr_0.8fr_auto] lg:items-end']}>
-    <div>
+  <div class:list={['grid gap-3', compact ? 'grid-cols-2' : 'grid-cols-2 lg:grid-cols-[1.1fr_1.1fr_0.7fr_0.8fr_0.8fr_auto] lg:items-end']}>
+    <div class:list={!compact && 'col-span-1'}>
       <label class="rotulo" for={`${id}-ci`}>Chegada</label>
       <input class="campo" type="date" id={`${id}-ci`} name="checkin" required autocomplete="off" />
     </div>
@@ -20,29 +21,35 @@ const cfg = { whatsapp: pousada.whatsapp, mode: bookingMode, engineUrl: bookingE
       <label class="rotulo" for={`${id}-co`}>Saída</label>
       <input class="campo" type="date" id={`${id}-co`} name="checkout" required autocomplete="off" />
     </div>
-    <div>
+    <div class:list={compact && 'col-span-2'}>
       <label class="rotulo" for={`${id}-ad`}>Adultos</label>
       <select class="campo" id={`${id}-ad`} name="adults">
-        {[1,2,3,4,5,6].map((n) => <option value={n} selected={n === 2}>{n}</option>)}
+        {[1,2,3,4].map((n) => <option value={n} selected={n === 2}>{n}</option>)}
       </select>
     </div>
     <div>
-      <label class="rotulo" for={`${id}-ch`}>Crianças</label>
-      <select class="campo" id={`${id}-ch`} name="children">
-        {[0,1,2,3,4].map((n) => <option value={n}>{n}</option>)}
+      <label class="rotulo" for={`${id}-k6`}>Até 6 anos</label>
+      <select class="campo" id={`${id}-k6`} name="kids6">
+        {[0,1,2].map((n) => <option value={n}>{n}</option>)}
       </select>
     </div>
-    {room ? <input type="hidden" name="room" value={room} /> : (
+    <div>
+      <label class="rotulo" for={`${id}-k7`}>7 a 12 anos</label>
+      <select class="campo" id={`${id}-k7`} name="kids7">
+        {[0,1,2].map((n) => <option value={n}>{n}</option>)}
+      </select>
+    </div>
+    {room ? <input type="hidden" name="room" value={room} data-slug={roomSlug} /> : (
       !compact && <input type="hidden" name="room" value="" />
     )}
-    <button type="submit" class:list={['btn-sol w-full', compact ? 'sm:col-span-2' : 'lg:w-auto']}>
+    <button type="submit" class:list={['btn-sol w-full col-span-2', compact ? '' : 'lg:col-span-1 lg:w-auto']}>
       Ver disponibilidade
       <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12m0 0-5-5m5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
   </div>
   <p class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-neblina">
     <span data-noites class="font-semibold text-mar"></span>
-    <span>Resposta pelo WhatsApp em poucos minutos, das 7h às 22h.</span>
+    <span>{bookingMode === 'interno' ? 'Preço e vaga na hora, sem taxa de reserva.' : 'Resposta pelo WhatsApp em poucos minutos, das 7h às 22h.'}</span>
     <span class="text-falesia font-medium" data-erro hidden></span>
   </p>
 </form>

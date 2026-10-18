@@ -1,0 +1,157 @@
+---
+import Base from '../layouts/Base.astro';
+import BookingBar from '../components/BookingBar.astro';
+import { availability, isIso, todayIso, fmtDate, brl, guestsLabel as gl, parseGuests, type Quote } from '../lib/engine';
+import { extras } from '../data/pricing';
+import { rooms, getRoom } from '../data/rooms';
+import { pousada } from '../data/pousada';
+import { waLink } from '../lib/format';
+export const prerender = false;
+
+const q = Astro.url.searchParams;
+const ci = q.get('checkin') || '';
+const co = q.get('checkout') || '';
+const guests = parseGuests((k) => q.get(k));
+const { adults, kids6, kids7 } = guests;
+const qs = `checkin=${ci}&checkout=${co}&adults=${adults}&kids6=${kids6}&kids7=${kids7}`;
+const chosen = q.get('room') || '';
+const erro = q.get('erro') || '';
+const validDates = isIso(ci) && isIso(co) && co > ci && ci >= todayIso();
+
+let quotes: Quote[] = [];
+let dbError = '';
+if (validDates) {
+  try { quotes = await availability(ci, co, guests); }
+  catch (e: any) { dbError = e?.message || 'Erro ao consultar disponibilidade.'; }
+}
+const selected = chosen ? quotes.find((x) => x.room.slug === chosen && x.ok) : undefined;
+const nights = quotes[0]?.nightsCount || 0;
+const ok = quotes.filter((x) => x.ok);
+const guestsLabel = gl(guests);
+const step = !validDates ? 1 : selected ? 3 : 2;
+const waAlt = waLink(`Olá! Procurei no site de ${fmtDate(ci || todayIso())} a ${fmtDate(co || todayIso())} para ${guestsLabel} e quero ajuda para encontrar uma opção.`);
+---
+<Base title="Reservar" description="Escolha as datas, veja preço e vaga por categoria e reserve direto com a Pousada Orla do Sol." noSticky>
+  <section class="container-site max-w-4xl pt-8 md:pt-12">
+    <ol class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-neblina" aria-label="Etapas">
+      {['Datas', 'Acomodação', 'Seus dados'].map((s, i) => (
+        <li class:list={['flex items-center gap-2', step === i + 1 && 'text-mar']}>
+          <span class:list={['grid h-6 w-6 place-items-center rounded-full text-[11px]', step > i + 1 ? 'bg-palmeira text-white' : step === i + 1 ? 'bg-sol text-mar-fundo' : 'bg-mar/10']}>{step > i + 1 ? '✓' : i + 1}</span>{s}
+          {i < 2 && <span class="mx-1 h-px w-6 bg-mar/15"></span>}
+        </li>
+      ))}
+    </ol>
+
+    {step === 1 && (
+      <div class="mt-6">
+        <h1 class="text-3xl font-extrabold md:text-4xl">Quando você vem?</h1>
+        <p class="mt-2 text-mar/80">Escolha as datas e o número de hóspedes. Você vê preço e vaga na hora.</p>
+        {(ci || co) && !validDates && <p class="mt-3 rounded-lg bg-falesia/10 px-3 py-2 text-sm text-falesia">Confira as datas: a saída precisa ser depois da chegada, e a chegada não pode estar no passado.</p>}
+        <div class="mt-6"><BookingBar /></div>
+      </div>
+    )}
+
+    {step === 2 && (
+      <div class="mt-6">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 class="text-3xl font-extrabold md:text-4xl">{fmtDate(ci)} a {fmtDate(co)}</h1>
+            <p class="mt-1 text-mar/80">{nights} {nights === 1 ? 'noite' : 'noites'} · {guestsLabel} · café da manhã incluso</p>
+          </div>
+          <a href={`/reservar`} class="btn-linha !py-2 !px-4 text-sm">Mudar datas</a>
+        </div>
+        {dbError && <p class="mt-4 rounded-lg bg-falesia/10 px-3 py-2 text-sm text-falesia">{dbError}</p>}
+        {erro && <p class="mt-4 rounded-lg bg-falesia/10 px-3 py-2 text-sm text-falesia">{erro}</p>}
+        <ul class="mt-6 space-y-4">
+          {quotes.map((x) => (
+            <li class:list={['ficha overflow-hidden md:flex', !x.ok && 'opacity-60']}>
+              <div class="foto-placeholder relative aspect-[4/3] md:w-56 md:shrink-0 md:aspect-auto">
+                <img src={x.room.photos[0].src} alt={x.room.photos[0].alt} class="h-full w-full object-cover" loading="lazy" onerror="this.remove()" />
+              </div>
+              <div class="flex flex-1 flex-col p-5">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <h2 class="text-xl font-bold">{x.room.name}</h2>
+                    <p class="text-sm text-neblina">{x.room.beds}</p>
+                  </div>
+                  {x.ok && x.available <= 2 && <span class="rounded-full bg-falesia/10 px-2.5 py-1 text-xs font-semibold text-falesia">{x.available === 1 ? 'Última vaga' : `Restam ${x.available}`}</span>}
+                </div>
+                <p class="mt-2 line-clamp-2 text-sm text-mar/80">{x.room.description}</p>
+                <div class="mt-4 flex flex-wrap items-end justify-between gap-3">
+                  <div>
+                    {x.ok ? (
+                      <>
+                        <p class="text-xs text-neblina">{x.nightsCount} {x.nightsCount === 1 ? 'noite' : 'noites'} · {brl(x.total / x.nightsCount)} por noite{x.extraPerNight ? ` (inclui ${brl(x.extraPerNight)} de cama extra)` : ''}</p>
+                        <p class="text-2xl font-extrabold">{brl(x.total)} <span class="text-xs font-normal text-neblina">total</span></p>
+                      </>
+                    ) : (
+                      <p class="text-sm font-semibold text-falesia">{x.reason}</p>
+                    )}
+                  </div>
+                  {x.ok ? (
+                    <a href={`/reservar?${qs}&room=${x.room.slug}`} class="btn-sol text-sm">Reservar este</a>
+                  ) : (
+                    <a href={`/acomodacoes/${x.room.slug}`} class="btn-linha !py-2 !px-4 text-sm">Ver outras datas</a>
+                  )}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+        {!dbError && ok.length === 0 && (
+          <div class="mt-6 rounded-[var(--radius-ficha)] bg-areia-clara p-6">
+            <p class="font-bold">Nada disponível para essa combinação.</p>
+            <p class="mt-1 text-sm text-mar/80">Tente outras datas, ou fale com a gente: às vezes conseguimos montar uma opção com dois quartos.</p>
+            <a href={waAlt} class="btn-mar mt-4 text-sm" data-origem="sem-vaga">Pedir ajuda no WhatsApp</a>
+          </div>
+        )}
+        <p class="mt-6 text-xs text-neblina">Valores em reais, por apartamento, com café da manhã. Sem taxa de serviço. Cama extra: {brl(extras.child6)} por noite até 6 anos, {brl(extras.person)} acima disso.</p>
+      </div>
+    )}
+
+    {step === 3 && selected && (
+      <div class="mt-6 grid gap-6 md:grid-cols-[1fr_320px]">
+        <form method="post" action="/api/reservas" class="ficha p-5 md:p-6">
+          <h1 class="text-2xl font-extrabold md:text-3xl">Quem vai se hospedar?</h1>
+          <p class="mt-1 text-sm text-mar/80">Só o essencial. A confirmação chega no seu WhatsApp.</p>
+          {erro && <p class="mt-4 rounded-lg bg-falesia/10 px-3 py-2 text-sm text-falesia">{erro}</p>}
+          <input type="hidden" name="room" value={selected.room.slug} />
+          <input type="hidden" name="checkin" value={ci} />
+          <input type="hidden" name="checkout" value={co} />
+          <input type="hidden" name="adults" value={adults} />
+          <input type="hidden" name="kids6" value={kids6} />
+          <input type="hidden" name="kids7" value={kids7} />
+          <div class="mt-5 grid gap-4">
+            <div><label class="rotulo" for="name">Nome completo</label><input class="campo" id="name" name="name" required minlength="3" autocomplete="name" /></div>
+            <div><label class="rotulo" for="phone">WhatsApp com DDD</label><input class="campo" id="phone" name="phone" required inputmode="tel" autocomplete="tel" placeholder="(31) 99999-9999" /></div>
+            <div><label class="rotulo" for="email">E-mail <span class="font-normal normal-case tracking-normal">(opcional)</span></label><input class="campo" id="email" name="email" type="email" autocomplete="email" /></div>
+            <div><label class="rotulo" for="notes">Alguma observação? <span class="font-normal normal-case tracking-normal">(horário de chegada, pet, cama extra)</span></label><textarea class="campo" id="notes" name="notes" rows="3"></textarea></div>
+          </div>
+          <button type="submit" class="btn-sol mt-6 w-full">Confirmar pedido de reserva</button>
+          <p class="mt-3 text-xs text-neblina">Ao enviar, a pousada recebe o pedido e responde no WhatsApp com a forma de pagamento (Pix ou cartão). Nada é cobrado agora.</p>
+        </form>
+        <aside class="ficha h-fit p-5 md:sticky md:top-24">
+          <p class="eyebrow">Resumo</p>
+          <p class="mt-2 text-lg font-bold">{selected.room.name}</p>
+          <p class="text-sm text-neblina">{selected.room.beds}</p>
+          <dl class="mt-4 space-y-2 text-sm">
+            <div class="flex justify-between"><dt class="text-neblina">Chegada</dt><dd class="font-semibold">{fmtDate(ci)} às {pousada.checkIn}</dd></div>
+            <div class="flex justify-between"><dt class="text-neblina">Saída</dt><dd class="font-semibold">{fmtDate(co)} até {pousada.checkOut}</dd></div>
+            <div class="flex justify-between"><dt class="text-neblina">Hóspedes</dt><dd class="font-semibold">{guestsLabel}</dd></div>
+          </dl>
+          <details class="mt-4 text-sm">
+            <summary class="flex items-center justify-between font-semibold">{selected.nightsCount} {selected.nightsCount === 1 ? 'noite' : 'noites'} <span class="text-mar-claro text-xs">ver por dia</span></summary>
+            <ul class="mt-2 space-y-1 text-neblina">
+              {selected.nights.map((n) => <li class="flex justify-between"><span>{fmtDate(n.date)}</span><span>{brl(n.price)}{n.extra || n.surcharge ? <span class="text-[11px]"> ({brl(n.base)}{n.extra ? ` + ${brl(n.extra)} extra` : ''}{n.surcharge ? ` + ${brl(n.surcharge)}` : ''})</span> : null}</span></li>)}
+            </ul>
+          </details>
+          <div class="mt-4 flex items-baseline justify-between border-t border-mar/10 pt-4">
+            <span class="font-semibold">Total</span><span class="text-2xl font-extrabold">{brl(selected.total)}</span>
+          </div>
+          <p class="mt-1 text-xs text-neblina">Café da manhã e estacionamento inclusos.</p>
+          <a href={`/reservar?${qs}`} class="mt-4 inline-block text-sm text-mar-claro underline-offset-4 hover:underline">Trocar acomodação</a>
+        </aside>
+      </div>
+    )}
+  </section>
+</Base>

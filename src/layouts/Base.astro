@@ -15,8 +15,10 @@ interface Props {
   schema?: Record<string, unknown>[];
   /** esconde a barra fixa inferior (ex.: página de contato) */
   noSticky?: boolean;
+  /** páginas privadas (reserva, admin) */
+  noindex?: boolean;
 }
-const { title, description = pousada.description, image = '/images/og.jpg', schema = [], noSticky = false } = Astro.props;
+const { title, description = pousada.description, image = '/images/og.jpg', schema = [], noSticky = false, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/') || '/', siteUrl).href;
 const fullTitle = title.includes(pousada.name) ? title : `${title} · ${pousada.name}`;
 ---
@@ -28,6 +30,7 @@ const fullTitle = title.includes(pousada.name) ? title : `${title} · ${pousada.
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#0e3b43" />

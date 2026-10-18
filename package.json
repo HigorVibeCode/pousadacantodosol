@@ -11,8 +11,14 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/vercel": "^8.2.11",
+    "@electric-sql/pglite": "^0.5.10",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^5",
+    "pg": "^8.23.1",
     "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1"
   }
 }

@@ -23,13 +23,14 @@ import { pousada } from '../data/pousada';
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
         <p class="eyebrow">Acomodações</p>
-        <h2 class="mt-2 text-3xl font-extrabold md:text-4xl">{pousada.roomsTotal} apartamentos, do casal ao grupo de seis</h2>
+        <h2 class="mt-2 text-3xl font-extrabold md:text-4xl">{pousada.roomsTotal} apartamentos, com ou sem varanda</h2>
       </div>
       <a href="/acomodacoes" class="btn-linha text-sm">Comparar todas</a>
     </div>
-    <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:max-w-3xl">
       {rooms.map((r) => <li><RoomCard room={r} /></li>)}
     </ul>
+    <p class="mt-4 text-sm text-mar/80">Família? O preço cobre 2 pessoas. Cama extra custa R$ 50 por noite para criança até 6 anos e R$ 130 acima disso. Sem taxa de serviço.</p>
   </section>
 
   <Horizonte />

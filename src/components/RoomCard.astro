@@ -1,9 +1,11 @@
 ---
 import type { Room } from '../data/rooms';
 import { brl } from '../lib/format';
+import { priceFrom } from '../data/rooms';
 interface Props { room: Room }
 const { room } = Astro.props;
-const cap = `Até ${room.capacity.total} ${room.capacity.total === 1 ? 'pessoa' : 'pessoas'}`;
+const from = priceFrom(room);
+const cap = `${room.baseOccupancy} pessoas, até ${room.maxOccupancy} com cama extra`;
 ---
 <article class="group overflow-hidden rounded-[var(--radius-ficha)] border border-mar/10 bg-white transition hover:shadow-ficha">
   <a href={`/acomodacoes/${room.slug}`} class="block">
@@ -13,12 +15,12 @@ const cap = `Até ${room.capacity.total} ${room.capacity.total === 1 ? 'pessoa' 
     </div>
     <div class="p-5">
       <h3 class="text-xl font-bold">{room.name}</h3>
-      <p class="mt-1 text-sm text-neblina">{cap} · {room.beds}</p>
+      <p class="mt-1 text-sm text-neblina">{cap}</p>
       <p class="mt-3 line-clamp-2 text-sm text-mar/80">{room.description}</p>
       <div class="mt-4 flex items-end justify-between">
         <div>
-          {room.priceFrom ? (
-            <><p class="text-xs text-neblina">a partir de</p><p class="text-lg font-bold">{brl(room.priceFrom)}<span class="text-xs font-normal text-neblina"> / noite</span></p></>
+          {from ? (
+            <><p class="text-xs text-neblina">a partir de, para 2</p><p class="text-lg font-bold">{brl(from)}<span class="text-xs font-normal text-neblina"> / noite</span></p></>
           ) : (
             <p class="text-sm font-semibold text-mar-claro">Consultar tarifa</p>
           )}

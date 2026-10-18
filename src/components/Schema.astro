@@ -39,7 +39,7 @@ const lodging = {
     name: r.name,
     url: `${siteUrl}/acomodacoes/${r.slug}`,
     bed: { '@type': 'BedDetails', typeOfBed: r.beds },
-    occupancy: { '@type': 'QuantitativeValue', maxValue: r.capacity.total, unitCode: 'C62' },
+    occupancy: { '@type': 'QuantitativeValue', maxValue: r.maxOccupancy, unitCode: 'C62' },
   })),
 };
 const all = [lodging, ...extra];
