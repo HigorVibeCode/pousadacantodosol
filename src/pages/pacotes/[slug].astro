@@ -22,7 +22,7 @@ const schema = [{
   offers: { '@type': 'Offer', priceCurrency: 'BRL', price: from, availability: 'https://schema.org/InStock', url: `${Astro.site}pacotes/${pkg.slug}` },
 }];
 ---
-<Base title={`${pkg.name} · pacote completo`} description={`${pkg.tagline} ${nightsLabel(pkg)}, a partir de R$ ${from} por pessoa, com passeios e transfer inclusos. ${pousada.name}, Prado BA.`} schema={schema}>
+<Base title={`${pkg.name} · pacote completo`} image={pkg.photo.src} description={`${pkg.tagline} ${nightsLabel(pkg)}, a partir de R$ ${from} por pessoa, com passeios e transfer inclusos. ${pousada.name}, Prado BA.`} schema={schema}>
   <nav class="container-site pt-6 text-sm text-neblina" aria-label="Você está em">
     <a href="/" class="hover:underline">Início</a> › <a href="/pacotes" class="hover:underline">Pacotes</a> › <span class="text-mar">{pkg.name}</span>
   </nav>

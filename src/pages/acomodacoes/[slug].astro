@@ -23,7 +23,7 @@ const schema = [{
   containedInPlace: { '@id': `${siteUrl}/#pousada` },
 }];
 ---
-<Base title={`${room.name}`} description={`${room.name} na ${pousada.name}, Prado BA: ${room.beds}, até ${room.maxOccupancy} pessoas, ar-condicionado e café incluso. ${room.ideal}.`} schema={schema}>
+<Base title={`${room.name}`} image={room.photos[0]?.src} description={`${room.name} na ${pousada.name}, Prado BA: ${room.beds}, até ${room.maxOccupancy} pessoas, ar-condicionado e café incluso. ${room.ideal}.`} schema={schema}>
   <nav class="container-site pt-6 text-sm text-neblina" aria-label="Você está em">
     <a href="/" class="hover:underline">Início</a> › <a href="/acomodacoes" class="hover:underline">Acomodações</a> › <span class="text-mar">{room.name}</span>
   </nav>

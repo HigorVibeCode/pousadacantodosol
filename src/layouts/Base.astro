@@ -43,6 +43,7 @@ const fullTitle = title.includes(pousada.name) ? title : `${title} · ${pousada.
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={new URL(image, siteUrl).href} />
+    <meta property="og:image:alt" content={fullTitle} />
     <meta property="og:locale" content="pt_BR" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
