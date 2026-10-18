@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS reservations (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS reservations_dates ON reservations (room_type, checkin, checkout);
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS package TEXT;
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS extras TEXT;
 CREATE TABLE IF NOT EXISTS blocks (
   id SERIAL PRIMARY KEY,
   room_type TEXT NOT NULL,

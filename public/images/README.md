@@ -11,3 +11,7 @@ Enquanto os arquivos abaixo não existirem, o site mostra um gradiente no lugar.
 | `rooms/normal-1.jpg` | Apartamento Padrão | 1600×1200 |
 
 Os nomes e textos alternativos estão em `src/data/rooms.ts`.
+
+## Pacotes
+
+Uma foto por pacote em `pacotes/<slug>.jpg` (1600×1000): `fim-de-semana-a-dois`, `retiro-de-descanso`, `semana-em-familia`, `temporada-das-baleias`, `festival-gastronomico`, `reveillon`, `carnaval`, `prado-moto-rock`, `feriado-prolongado`.

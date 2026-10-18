@@ -8,22 +8,37 @@ interface Props {
   id?: string;
   /** desenha o calendário embutido abaixo dos campos (página do apartamento) */
   inlineCalendar?: boolean;
+  /** pacote pré-selecionado (página de pacote) */
+  packageSlug?: string;
+  /** datas fixas do pacote: vira uma lista de opções no lugar do calendário */
+  fixedDates?: { checkin: string; checkout: string; label: string }[];
+  /** dica sobre noites e dias de check-in do pacote */
+  hint?: string;
 }
-const { room = '', roomSlug = '', compact = false, id = 'reservar', inlineCalendar = false } = Astro.props;
+const { room = '', roomSlug = '', compact = false, id = 'reservar', inlineCalendar = false, packageSlug = '', fixedDates = [], hint = '' } = Astro.props;
 const cfg = { whatsapp: pousada.whatsapp, mode: bookingMode, engineUrl: bookingEngineUrl };
 ---
 <form id={id} class:list={['ficha relative p-4 sm:p-5 scroll-mt-24', compact ? '' : 'md:p-6']} data-booking data-cfg={JSON.stringify(cfg)} data-room-slug={roomSlug} data-inline={inlineCalendar ? '1' : ''} novalidate>
   <input type="hidden" name="checkin" />
   <input type="hidden" name="checkout" />
+  {packageSlug && <input type="hidden" name="package" value={packageSlug} />}
+  {fixedDates.length > 0 && (
+    <div class="mb-3">
+      <span class="rotulo">Datas do pacote</span>
+      <div class="flex flex-wrap gap-2">
+        {fixedDates.map((f) => <button type="button" class="btn-linha !py-2 !px-4 text-sm" data-fixed-date data-ci={f.checkin} data-co={f.checkout}>{f.label}</button>)}
+      </div>
+    </div>
+  )}
   <div class:list={['grid gap-3', compact ? 'grid-cols-2' : 'grid-cols-2 lg:grid-cols-[1.1fr_1.1fr_0.7fr_0.8fr_0.8fr_auto] lg:items-end']}>
-    <div>
+    <div class:list={fixedDates.length > 0 && 'hidden'}>
       <span class="rotulo">Chegada</span>
       <button type="button" class="campo campo-data" data-trigger="checkin" aria-haspopup="dialog">
         <svg class="h-4 w-4 shrink-0 text-mar-claro" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 8h14M7 2v4M13 2v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
         <span data-val>Escolher</span>
       </button>
     </div>
-    <div>
+    <div class:list={fixedDates.length > 0 && 'hidden'}>
       <span class="rotulo">Saída</span>
       <button type="button" class="campo campo-data" data-trigger="checkout" aria-haspopup="dialog">
         <svg class="h-4 w-4 shrink-0 text-mar-claro" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 8h14M7 2v4M13 2v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -56,7 +71,7 @@ const cfg = { whatsapp: pousada.whatsapp, mode: bookingMode, engineUrl: bookingE
   </div>
   <p class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-neblina">
     <span data-noites class="font-semibold text-mar"></span>
-    <span>{bookingMode === 'interno' ? 'Preço e vaga na hora, sem taxa de reserva.' : 'Resposta pelo WhatsApp em poucos minutos, das 7h às 22h.'}</span>
+    <span>{hint || (bookingMode === 'interno' ? 'Preço e vaga na hora, sem taxa de reserva.' : 'Resposta pelo WhatsApp em poucos minutos, das 7h às 22h.')}</span>
     <span class="text-falesia font-medium" data-erro hidden></span>
   </p>
   {inlineCalendar && <div class="mt-4" data-inline-mount></div>}

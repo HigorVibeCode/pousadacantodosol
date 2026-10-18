@@ -30,6 +30,7 @@ export function initBooking(form: HTMLFormElement, cfg: Cfg) {
   const k6 = form.querySelector<HTMLSelectElement>('[name=kids6]')!;
   const k7 = form.querySelector<HTMLSelectElement>('[name=kids7]')!;
   const room = form.querySelector<HTMLInputElement>('[name=room]');
+  const pkg = form.querySelector<HTMLInputElement>('[name=package]')?.value || '';
   const out = form.querySelector<HTMLElement>('[data-noites]');
   const err = form.querySelector<HTMLElement>('[data-erro]');
 
@@ -56,6 +57,7 @@ export function initBooking(form: HTMLFormElement, cfg: Cfg) {
   const roomObj = form.dataset.roomSlug ? getRoom(form.dataset.roomSlug) : undefined;
   const inlineMount = form.querySelector<HTMLElement>('[data-inline-mount]');
   const triggers = { checkin: form.querySelector<HTMLElement>('[data-trigger=checkin]')!, checkout: form.querySelector<HTMLElement>('[data-trigger=checkout]')! };
+  const chips = Array.from(form.querySelectorAll<HTMLButtonElement>('[data-fixed-date]'));
   const picker = createPicker(inlineMount
     ? { checkin: ci, checkout: co, mount: inlineMount, room: roomObj, onChange: refresh }
     : { checkin: ci, checkout: co, triggers, room: roomObj, onChange: refresh });
@@ -63,12 +65,21 @@ export function initBooking(form: HTMLFormElement, cfg: Cfg) {
     triggers.checkin.addEventListener('click', () => inlineMount.scrollIntoView({ behavior: 'smooth', block: 'center' }));
     triggers.checkout.addEventListener('click', () => inlineMount.scrollIntoView({ behavior: 'smooth', block: 'center' }));
   }
+  // datas fixas (pacotes de evento): um toque escolhe chegada e saída
+  const paintChips = () => chips.forEach((c) => c.classList.toggle('!bg-mar', c.dataset.ci === ci.value && c.dataset.co === co.value) || c.classList.toggle('!text-espuma', c.dataset.ci === ci.value && c.dataset.co === co.value));
+  chips.forEach((c) => c.addEventListener('click', () => {
+    ci.value = c.dataset.ci!; co.value = c.dataset.co!;
+    ci.dispatchEvent(new Event('change')); co.dispatchEvent(new Event('change'));
+    picker.render(); paintChips();
+  }));
+  if (chips.length && !chips.some((c) => c.dataset.ci === ci.value && c.dataset.co === co.value)) { ci.value = ''; co.value = ''; refresh(); }
+  paintChips();
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!ci.value || !co.value || co.value <= ci.value) {
       if (err) { err.hidden = false; err.textContent = 'Escolha a data de chegada e de saída.'; }
-      if (!inlineMount) picker.open(ci.value ? 'out' : 'in');
+      if (!inlineMount && !chips.length) picker.open(ci.value ? 'out' : 'in');
       return;
     }
     const sel = { checkin: ci.value, checkout: co.value, adults: ad.value, kids6: k6.value, kids7: k7.value };
@@ -80,6 +91,7 @@ export function initBooking(form: HTMLFormElement, cfg: Cfg) {
     if (cfg.mode === 'interno') {
       const p: Record<string, string> = { ...sel };
       if (room?.dataset.slug) p.room = room.dataset.slug;
+      if (pkg) p.package = pkg;
       window.location.href = href('/reservar', p);
       return;
     }

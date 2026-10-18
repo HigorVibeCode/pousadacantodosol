@@ -1,0 +1,44 @@
+---
+import Base from '../../layouts/Base.astro';
+import PackageCard from '../../components/PackageCard.astro';
+import Horizonte from '../../components/Horizonte.astro';
+import { packages } from '../../data/packages';
+import { groupLabel } from '../../lib/packages-ui';
+import { pousada } from '../../data/pousada';
+const groups = (['casais', 'familia', 'eventos'] as const).map((g) => ({ key: g, label: groupLabel[g], items: packages.filter((p) => p.group === g) }));
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'ItemList',
+  itemListElement: packages.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name, url: `${Astro.site}pacotes/${p.slug}` })),
+}];
+---
+<Base title="Pacotes completos em Prado" description={`Pacotes da ${pousada.name}: fim de semana a dois, semana em família, temporada das baleias, Réveillon, Carnaval e feriados, com passeios e transfer inclusos.`} schema={schema}>
+  <section class="container-site pt-12 md:pt-16">
+    <p class="eyebrow">Pacotes completos</p>
+    <h1 class="mt-2 max-w-3xl text-4xl font-extrabold md:text-5xl">Chegue e não planeje nada</h1>
+    <p class="mt-4 max-w-2xl text-lg text-mar/80">Cada pacote junta hospedagem com café, passeios com parceiros de Prado e o transfer da pousada, com saída às 9h e às 19h todos os dias. O preço é por pessoa em apartamento duplo. Transporte até Prado não está incluso.</p>
+    <ul class="mt-6 flex flex-wrap gap-2 text-sm">
+      {groups.map((g) => <li><a href={`#${g.key}`} class="btn-linha !py-2 !px-4 text-sm">{g.label}</a></li>)}
+    </ul>
+  </section>
+  {groups.map((g, i) => (
+    <>
+      {i > 0 && <Horizonte />}
+      <section class="container-site scroll-mt-24" id={g.key}>
+        <h2 class="text-2xl font-extrabold md:text-3xl">{g.label}</h2>
+        <ul class={`mt-6 grid gap-4 sm:grid-cols-2 ${g.items.length > 2 ? 'lg:grid-cols-3' : 'lg:max-w-4xl'}`}>
+          {g.items.map((p) => <li><PackageCard pkg={p} /></li>)}
+        </ul>
+      </section>
+    </>
+  ))}
+  <section class="container-site mt-16">
+    <div class="rounded-[var(--radius-ficha)] bg-areia-clara p-6 md:p-8 text-sm text-mar/85">
+      <p class="font-bold">Como funciona</p>
+      <ol class="mt-2 list-decimal space-y-1 pl-5">
+        <li>Escolha o pacote e as datas. O site mostra o valor completo na hora.</li>
+        <li>Envie o pedido. A pousada confirma no WhatsApp e manda o Pix ou link de cartão do sinal.</li>
+        <li>Os passeios são feitos por parceiros autorizados da cidade e marcados pela pousada. Horários sujeitos a maré e tempo.</li>
+      </ol>
+    </div>
+  </section>
+</Base>

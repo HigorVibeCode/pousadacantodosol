@@ -64,6 +64,8 @@ Os redirecionamentos 301 das URLs dos sites antigos estão em `vercel.json` (pro
 - [ ] E-mail e CNPJ em `src/data/pousada.ts`
 - [ ] Confirmar coordenadas (`geo`) e nota/total do Google no dia da publicação
 - [ ] Política de cancelamento, crianças e pets em `src/data/faq.ts`
+- [ ] Preços dos parceiros e datas dos eventos de 2027 em `src/data/packages.ts` e `src/data/extras.ts`
+- [ ] Fotos dos pacotes em `public/images/pacotes/`
 - [ ] `PUBLIC_GTM_ID` configurado com GA4 e conversão do Google Ads no evento `reserva_clique`
 - [ ] Enviar sitemap no Search Console
 
@@ -81,6 +83,10 @@ Depois, converter os links absolutos em relativos e renomear `_astro` para `asse
 | `reserva_clique` | botão principal do formulário | `modo`, `noites`, `adultos`, `criancas`, `categoria` |
 | `whatsapp_clique` | qualquer link de WhatsApp fora do formulário | `origem` |
 | `telefone_clique` | qualquer link `tel:` | `origem` |
+
+## Pacotes completos
+
+`src/data/packages.ts` define cada pacote: noites permitidas, dias de check-in, janelas ou datas fixas, tipos de apartamento, desconto na hospedagem, extras por pessoa (parceiros com margem) e itens por reserva. O preço é calculado pelo motor: hospedagem da tabela com desconto + extras + mimos. Páginas em `/pacotes` e `/pacotes/<slug>`; a reserva passa por `/reservar?package=<slug>`. Extras avulsos do funil ficam em `src/data/extras.ts`. Todos os valores de parceiros são estimativas até a lista oficial.
 
 ## Trocar por um motor de fornecedor
 

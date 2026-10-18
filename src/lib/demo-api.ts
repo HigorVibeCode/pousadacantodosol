@@ -2,7 +2,7 @@
 import { load, save } from './demo-store';
 import {
   occupancyFrom, availabilityFrom, calendarFrom, gridFrom, newCode, validateReservation, quoteJson, parseGuests,
-  isIso, todayIso, addDays, monthRange, type ReservationRow,
+  isIso, todayIso, addDays, monthRange, resolvePackage, extrasTotal, parseExtras, type ReservationRow,
 } from './engine-core';
 import { getRoom } from '../data/rooms';
 
@@ -23,7 +23,10 @@ export async function demoFetch(path: string, init?: RequestInit): Promise<Respo
     if (!isIso(ci) || !isIso(co) || co <= ci) return json({ error: 'Datas inválidas.' }, 400);
     if (ci < todayIso()) return json({ error: 'A data de chegada já passou.' }, 400);
     const guests = parseGuests((k) => q.get(k));
-    return json({ checkin: ci, checkout: co, ...guests, rooms: availabilityFrom(occ(ci, co), ci, co, guests).map(quoteJson) });
+    try {
+      const pkg = resolvePackage(q.get('package') || undefined);
+      return json({ checkin: ci, checkout: co, ...guests, package: pkg?.slug || null, rooms: availabilityFrom(occ(ci, co), ci, co, guests, pkg).map(quoteJson) });
+    } catch (e: any) { return json({ error: e.message }, 404); }
   }
   if (p === '/api/calendario') {
     const room = q.get('room') || '';
@@ -34,15 +37,18 @@ export async function demoFetch(path: string, init?: RequestInit): Promise<Respo
     return days ? json({ room, days }) : json({ error: 'Tipo inválido' }, 404);
   }
   if (p === '/api/reservas') {
-    const input = { room: body.room, checkin: body.checkin, checkout: body.checkout, ...parseGuests((k) => body[k]), name: body.name || '', phone: body.phone || '', email: body.email, notes: body.notes };
+    const input = { room: body.room, checkin: body.checkin, checkout: body.checkout, ...parseGuests((k) => body[k]), name: body.name || '', phone: body.phone || '', email: body.email, notes: body.notes, package: body.package || undefined, extras: parseExtras(body.extras) };
     try {
       if (!isIso(input.checkin) || !isIso(input.checkout) || input.checkout <= input.checkin) throw new Error('Datas inválidas.');
-      const qt = validateReservation(input, availabilityFrom(occ(input.checkin, input.checkout), input.checkin, input.checkout, input));
+      const pkg = resolvePackage(input.package);
+      const qt = validateReservation(input, availabilityFrom(occ(input.checkin, input.checkout), input.checkin, input.checkout, input, pkg));
+      const ex = pkg ? { items: [], total: 0 } : extrasTotal(input.extras, input);
       const row: ReservationRow = {
         id: ++s.seq, code: newCode(), room_type: qt.room.slug, checkin: input.checkin, checkout: input.checkout,
         adults: input.adults, kids6: input.kids6, kids7: input.kids7, guest_name: input.name.trim(), guest_phone: input.phone.replace(/\D/g, ''),
-        guest_email: input.email?.trim() || null, total_cents: Math.round(qt.total * 100), status: 'pendente', notes: input.notes?.trim() || null, created_at: new Date().toISOString(),
-      };
+        guest_email: input.email?.trim() || null, total_cents: Math.round((qt.total + ex.total) * 100), status: 'pendente', notes: input.notes?.trim() || null, created_at: new Date().toISOString(),
+        package: pkg?.slug || null, extras: ex.items.length ? JSON.stringify(ex.items.map((i) => i.id)) : null,
+      } as ReservationRow;
       s.reservations.push(row); save(s);
       return json({ code: row.code });
     } catch (e: any) { return json({ error: e.message }, 400); }

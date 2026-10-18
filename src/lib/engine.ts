@@ -5,6 +5,7 @@ import { getDb } from './db';
 import { getRoom } from '../data/rooms';
 import {
   occupancyFrom, availabilityFrom, calendarFrom, gridFrom, newCode, validateReservation, todayIso, isIso, addDays, monthRange,
+  resolvePackage, extrasTotal,
   type Guests, type NewReservation, type ReservationRow, type BlockRow,
 } from './engine-core';
 export * from './engine-core';
@@ -16,8 +17,8 @@ async function occupancy(ci: string, co: string) {
   return occupancyFrom(res, blk, ci, co);
 }
 
-export async function availability(ci: string, co: string, guests: Guests) {
-  return availabilityFrom(await occupancy(ci, co), ci, co, guests);
+export async function availability(ci: string, co: string, guests: Guests, pkgSlug?: string) {
+  return availabilityFrom(await occupancy(ci, co), ci, co, guests, resolvePackage(pkgSlug));
 }
 
 export async function calendar(roomSlug: string, year: number, month: number) {
@@ -28,15 +29,17 @@ export async function calendar(roomSlug: string, year: number, month: number) {
 
 export async function createReservation(input: NewReservation) {
   if (!isIso(input.checkin) || !isIso(input.checkout) || input.checkout <= input.checkin) throw new Error('Datas inválidas.');
-  const q = validateReservation(input, await availability(input.checkin, input.checkout, input));
+  const q = validateReservation(input, await availability(input.checkin, input.checkout, input, input.package));
+  const ex = input.package ? { items: [], total: 0 } : extrasTotal(input.extras || [], input);
+  const total = q.total + ex.total;
   const db = await getDb();
   for (let attempt = 0; attempt < 5; attempt++) {
     const code = newCode();
     try {
       const [row] = await db.query<ReservationRow>(
-        `INSERT INTO reservations (code, room_type, checkin, checkout, adults, kids6, kids7, guest_name, guest_phone, guest_email, total_cents, notes)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
-        [code, q.room.slug, input.checkin, input.checkout, input.adults, input.kids6, input.kids7, input.name.trim(), input.phone.replace(/\D/g, ''), input.email?.trim() || null, Math.round(q.total * 100), input.notes?.trim() || null],
+        `INSERT INTO reservations (code, room_type, checkin, checkout, adults, kids6, kids7, guest_name, guest_phone, guest_email, total_cents, notes, package, extras)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING *`,
+        [code, q.room.slug, input.checkin, input.checkout, input.adults, input.kids6, input.kids7, input.name.trim(), input.phone.replace(/\D/g, ''), input.email?.trim() || null, Math.round(total * 100), input.notes?.trim() || null, input.package || null, ex.items.length ? JSON.stringify(ex.items.map((i) => i.id)) : null],
       );
       return { reservation: row, quote: q };
     } catch (e: any) {

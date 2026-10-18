@@ -3,6 +3,8 @@ import { api, post, resetDemo } from './api';
 import { href, esc, isDemo } from './nav';
 import { brl, fmtDate, addDays } from './engine-core';
 import { rooms, getRoom, totalRooms } from '../data/rooms';
+import { getPackage } from '../data/packages';
+import { getExtra } from '../data/extras';
 
 const dia = (iso: string) => iso.slice(-2);
 const dow = (iso: string) => ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'][new Date(iso + 'T12:00:00Z').getUTCDay()];
@@ -76,7 +78,7 @@ export async function mountAdmin(app: HTMLElement) {
             <tr>
               <td class="px-3 py-2 font-semibold"><a href="${href('/reserva', { code: r.code })}" class="underline-offset-4 hover:underline">${esc(r.code)}</a></td>
               <td class="px-3 py-2">${esc(r.guest_name)}<br /><a href="https://wa.me/55${esc(String(r.guest_phone).replace(/^55/, ''))}" target="_blank" rel="noopener" class="text-xs text-mar-claro">${esc(r.guest_phone)}</a>${r.notes ? `<p class="text-xs text-neblina">${esc(r.notes)}</p>` : ''}</td>
-              <td class="px-3 py-2">${esc(getRoom(r.room_type)?.name)}<br /><span class="text-xs text-neblina">${r.adults} ad.${r.kids6 ? ` + ${r.kids6} cr. ≤6` : ''}${r.kids7 ? ` + ${r.kids7} cr. 7+` : ''}</span></td>
+              <td class="px-3 py-2">${esc(getRoom(r.room_type)?.name)}<br /><span class="text-xs text-neblina">${r.adults} ad.${r.kids6 ? ` + ${r.kids6} cr. ≤6` : ''}${r.kids7 ? ` + ${r.kids7} cr. 7+` : ''}</span>${r.package ? `<br /><span class="inline-block rounded-full bg-sol/20 px-2 py-0.5 text-[11px] font-semibold">Pacote ${esc(getPackage(r.package)?.name || r.package)}</span>` : ''}${r.extras ? `<br /><span class="text-[11px] text-neblina">+ ${esc((() => { try { return (JSON.parse(r.extras) as string[]).map((id) => getExtra(id)?.name || id).join(', '); } catch { return r.extras; } })())}</span>` : ''}</td>
               <td class="px-3 py-2 whitespace-nowrap">${fmtDate(r.checkin)} → ${fmtDate(r.checkout)}</td>
               <td class="px-3 py-2 text-right font-semibold">${brl(r.total_cents / 100)}</td>
               <td class="px-3 py-2"><span class="rounded-full px-2 py-0.5 text-xs font-semibold ${statusCls[r.status] || ''}">${esc(r.status)}</span></td>

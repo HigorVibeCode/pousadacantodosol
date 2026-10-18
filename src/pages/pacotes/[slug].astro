@@ -1,0 +1,84 @@
+---
+import Base from '../../layouts/Base.astro';
+import BookingBar from '../../components/BookingBar.astro';
+import PackageCard from '../../components/PackageCard.astro';
+import { packages } from '../../data/packages';
+import { rooms } from '../../data/rooms';
+import { packageFromPrice, brl } from '../../lib/engine-core';
+import { rulesLabel, nightsLabel, audienceLabel } from '../../lib/packages-ui';
+import { pousada } from '../../data/pousada';
+
+export function getStaticPaths() {
+  return packages.map((pkg) => ({ params: { slug: pkg.slug }, props: { pkg } }));
+}
+const { pkg } = Astro.props;
+const from = packageFromPrice(pkg);
+const others = packages.filter((p) => p.slug !== pkg.slug && p.group === pkg.group).slice(0, 3);
+const roomNames = pkg.rooms.map((r) => rooms.find((x) => x.slug === r)?.name).filter(Boolean).join(' ou ');
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'Product', name: `${pkg.name} · ${pousada.name}`, description: pkg.tagline,
+  brand: { '@type': 'Brand', name: pousada.name },
+  offers: { '@type': 'Offer', priceCurrency: 'BRL', price: from, availability: 'https://schema.org/InStock', url: `${Astro.site}pacotes/${pkg.slug}` },
+}];
+---
+<Base title={`${pkg.name} · pacote completo`} description={`${pkg.tagline} ${nightsLabel(pkg)}, a partir de R$ ${from} por pessoa, com passeios e transfer inclusos. ${pousada.name}, Prado BA.`} schema={schema}>
+  <nav class="container-site pt-6 text-sm text-neblina" aria-label="Você está em">
+    <a href="/" class="hover:underline">Início</a> › <a href="/pacotes" class="hover:underline">Pacotes</a> › <span class="text-mar">{pkg.name}</span>
+  </nav>
+  <section class="container-site mt-6 grid gap-8 lg:grid-cols-[1.3fr_1fr]">
+    <div>
+      <figure class="foto-placeholder overflow-hidden rounded-[var(--radius-ficha)] aspect-[16/9]">
+        <img src={pkg.photo.src} alt={pkg.photo.alt} class="h-full w-full object-cover" loading="eager" onerror="this.remove()" />
+      </figure>
+      <div class="mt-6 flex flex-wrap gap-2 text-xs font-semibold">
+        <span class="rounded-full bg-sol/20 px-3 py-1">{audienceLabel[pkg.audience]}</span>
+        <span class="rounded-full bg-mar/10 px-3 py-1">{nightsLabel(pkg)}</span>
+        <span class="rounded-full bg-mar/10 px-3 py-1">{pkg.seasonLabel}</span>
+      </div>
+      <h1 class="mt-3 text-4xl font-extrabold md:text-5xl">{pkg.name}</h1>
+      <p class="mt-4 text-lg text-mar/85">{pkg.tagline}</p>
+
+      <h2 class="mt-8 text-xl font-bold">O que está incluso</h2>
+      <ul class="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+        {pkg.includes.map((i) => <li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sol"></span><span>{i}</span></li>)}
+      </ul>
+      <p class="mt-3 text-xs text-neblina">Não incluso: transporte até Prado, refeições fora das citadas, despesas pessoais. Passeios dependem de maré e tempo e podem ser remarcados dentro da estadia.</p>
+
+      <h2 class="mt-8 text-xl font-bold">Como são os dias</h2>
+      <ol class="mt-3 space-y-3">
+        {pkg.itinerary.map((d) => (
+          <li class="flex gap-4 rounded-xl bg-white p-4">
+            <span class="w-20 shrink-0 text-xs font-semibold uppercase tracking-wider text-falesia">{d.day}</span>
+            <div><p class="font-bold">{d.title}</p><p class="mt-1 text-sm text-mar/80">{d.text}</p></div>
+          </li>
+        ))}
+      </ol>
+
+      <h2 class="mt-8 text-xl font-bold">Regras do pacote</h2>
+      <ul class="mt-3 space-y-1 text-sm text-mar/85">
+        <li>{rulesLabel(pkg)}.</li>
+        <li>Apartamento: {roomNames}. Preço base para 2 pessoas; a partir da terceira, cama extra conforme a tabela{pkg.child6BedFree ? ', e criança até 6 anos sem custo de cama' : ''}.</li>
+        <li>Vagas limitadas: {pkg.capacity} por data.</li>
+        <li>Sinal de 30% para confirmar. Cancelamento conforme a política enviada com a cotação.</li>
+      </ul>
+    </div>
+
+    <aside class="lg:sticky lg:top-24 lg:self-start">
+      <div class="mb-3 flex items-baseline justify-between">
+        <p class="text-sm text-neblina">Pacote completo, por pessoa</p>
+        <p class="text-2xl font-extrabold">{brl(from)}<span class="text-sm font-normal text-neblina"> a partir de</span></p>
+      </div>
+      <BookingBar id="reservar" compact packageSlug={pkg.slug} fixedDates={pkg.fixedDates} hint={pkg.fixedDates.length ? 'Toque na data do pacote, escolha os hóspedes e veja o valor.' : `${rulesLabel(pkg)}. O site confere as datas.`} />
+      <p class="mt-3 text-xs text-neblina">Valores de passeios e parceiros estimados. A pousada confirma tudo no WhatsApp antes do pagamento.</p>
+    </aside>
+  </section>
+
+  {others.length > 0 && (
+    <section class="container-site mt-16">
+      <h2 class="text-2xl font-extrabold">Outros pacotes</h2>
+      <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {others.map((p) => <li><PackageCard pkg={p} compact /></li>)}
+      </ul>
+    </section>
+  )}
+</Base>

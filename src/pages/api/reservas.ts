@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { createReservation, parseGuests } from '../../lib/engine';
+import { createReservation, parseGuests, parseExtras } from '../../lib/engine';
 import { json, readBody } from './_json';
 export const prerender = false;
 
@@ -10,6 +10,7 @@ export const POST: APIRoute = async ({ request }) => {
     const { reservation } = await createReservation({
       room: b.room || '', checkin: b.checkin || '', checkout: b.checkout || '', ...parseGuests((k) => b[k]),
       name: b.name || '', phone: b.phone || '', email: b.email, notes: b.notes,
+      package: b.package || undefined, extras: parseExtras(b.extras),
     });
     return json({ code: reservation.code });
   } catch (e: any) {

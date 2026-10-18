@@ -1,0 +1,30 @@
+---
+import type { Package } from '../data/packages';
+import { packageFromPrice, brl } from '../lib/engine-core';
+import { nightsLabel, audienceLabel } from '../lib/packages-ui';
+interface Props { pkg: Package; compact?: boolean }
+const { pkg, compact = false } = Astro.props;
+const from = packageFromPrice(pkg);
+const top = pkg.includes.filter((i) => !i.startsWith('Hospedagem') && !i.startsWith('Estacionamento')).slice(0, compact ? 2 : 3);
+---
+<article class="group flex h-full flex-col overflow-hidden rounded-[var(--radius-ficha)] border border-mar/10 bg-white transition hover:shadow-ficha">
+  <a href={`/pacotes/${pkg.slug}`} class="block">
+    <div class="foto-placeholder relative aspect-[16/10] overflow-hidden">
+      <img src={pkg.photo.src} alt={pkg.photo.alt} class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" loading="lazy" onerror="this.remove()" />
+      <span class="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-mar backdrop-blur">{audienceLabel[pkg.audience]}</span>
+      <span class="absolute right-3 top-3 rounded-full bg-mar/80 px-2.5 py-1 text-xs font-semibold text-espuma backdrop-blur">{nightsLabel(pkg)}</span>
+    </div>
+  </a>
+  <div class="flex flex-1 flex-col p-5">
+    <p class="text-xs font-semibold uppercase tracking-wider text-falesia">{pkg.seasonLabel}</p>
+    <h3 class="mt-1 text-xl font-bold"><a href={`/pacotes/${pkg.slug}`}>{pkg.name}</a></h3>
+    <p class="mt-2 text-sm text-mar/80">{pkg.tagline}</p>
+    <ul class="mt-3 space-y-1 text-sm">
+      {top.map((i) => <li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sol"></span><span>{i}</span></li>)}
+    </ul>
+    <div class="mt-auto flex items-end justify-between pt-4">
+      <div><p class="text-xs text-neblina">a partir de</p><p class="text-lg font-bold">{brl(from)}<span class="text-xs font-normal text-neblina"> por pessoa</span></p></div>
+      <a href={`/pacotes/${pkg.slug}`} class="btn-sol !py-2 !px-4 text-sm">Ver pacote</a>
+    </div>
+  </div>
+</article>

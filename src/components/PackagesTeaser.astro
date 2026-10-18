@@ -1,0 +1,18 @@
+---
+import PackageCard from './PackageCard.astro';
+import { featuredPackages } from '../data/packages';
+const list = featuredPackages().slice(0, 4);
+---
+<section class="container-site" id="pacotes">
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <p class="eyebrow">Pacotes completos</p>
+      <h2 class="mt-2 max-w-2xl text-3xl font-extrabold md:text-4xl">Chegue e não planeje nada</h2>
+      <p class="mt-3 max-w-2xl text-mar/80">Hospedagem, café, passeios com parceiros da cidade e o transfer da pousada de manhã e à noite, num preço só. Para casais, famílias e as datas que lotam Prado.</p>
+    </div>
+    <a href="/pacotes" class="btn-linha text-sm">Ver todos os pacotes</a>
+  </div>
+  <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    {list.map((p) => <li><PackageCard pkg={p} compact /></li>)}
+  </ul>
+</section>

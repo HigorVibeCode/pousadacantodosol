@@ -2,8 +2,10 @@
  * Núcleo puro do motor de reservas: sem banco, roda no servidor e no navegador (modo demonstração).
  */
 import { rooms, getRoom, type Room } from '../data/rooms';
-import { nightPrice, tierFor, type Guests } from '../data/pricing';
-export type { Guests };
+import { nightPrice, tierFor, extras as pricingExtras, type Guests } from '../data/pricing';
+import { getPackage, type Package } from '../data/packages';
+import { getExtra } from '../data/extras';
+export type { Guests, Package };
 
 export const ACTIVE = ['pendente', 'confirmada'];
 
@@ -25,6 +27,7 @@ export type ReservationRow = {
   id: number; code: string; room_type: string; checkin: string; checkout: string;
   adults: number; kids6: number; kids7: number; guest_name: string; guest_phone: string; guest_email: string | null;
   total_cents: number; status: string; notes: string | null; created_at: string;
+  package?: string | null; extras?: string | null;
 };
 export type BlockRow = { id: number; room_type: string; start_date: string; end_date: string; qty: number; reason: string | null };
 
@@ -40,6 +43,8 @@ export type Quote = {
   fits: boolean;
   ok: boolean;
   reason?: string;
+  /** presente quando a cotação é de um pacote */
+  pkg?: { slug: string; name: string; lodging: number; discount: number; extras: number; perReservation: number; child6Free: number };
 };
 
 /** Mapa categoria → noite → unidades ocupadas, a partir de reservas ativas e bloqueios. */
@@ -70,14 +75,78 @@ export function quoteRoom(room: Room, ci: string, co: string, guests: Guests, av
   return { room, nights, total, minNights, nightsCount: dates.length, available, fits, ok: !reason, reason, extraPerNight: nights[0]?.extra || 0, surchargeTotal: nights.reduce((s, n) => s + n.surcharge, 0) };
 }
 
-export function availabilityFrom(occ: Map<string, Map<string, number>>, ci: string, co: string, guests: Guests): Quote[] {
+export function availabilityFrom(occ: Map<string, Map<string, number>>, ci: string, co: string, guests: Guests, pkg?: Package | null): Quote[] {
   const dates = nightsBetween(ci, co);
   return rooms.map((room) => {
     const m = occ.get(room.slug);
     const available = Math.min(...dates.map((d) => room.units - (m?.get(d) || 0)), room.units);
-    return quoteRoom(room, ci, co, guests, Math.max(0, available));
+    const q = quoteRoom(room, ci, co, guests, Math.max(0, available));
+    return pkg ? applyPackage(q, pkg, guests, ci, co) : q;
   });
 }
+
+/* ---------- Pacotes ---------- */
+const WEEKDAYS = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
+const weekday = (iso: string) => new Date(iso + 'T12:00:00Z').getUTCDay();
+
+/** Motivo pelo qual as datas não servem para o pacote, ou null se servem. */
+export function packageDateIssue(pkg: Package, ci: string, co: string): string | null {
+  const n = nightsBetween(ci, co).length;
+  if (pkg.fixedDates.length) {
+    return pkg.fixedDates.some((f) => f.checkin === ci && f.checkout === co) ? null : 'Este pacote tem datas fixas. Escolha uma das opções.';
+  }
+  if (!pkg.nights.includes(n)) return `Este pacote é de ${pkg.nights.join(' ou ')} noites.`;
+  if (pkg.windows.length && !pkg.windows.some((w) => ci >= w.start && ci <= w.end)) return 'Fora do período deste pacote.';
+  if (pkg.startDays.length && !pkg.startDays.includes(weekday(ci))) return `Check-in de ${pkg.startDays.map((d) => WEEKDAYS[d]).join(' ou ')}.`;
+  return null;
+}
+
+/** Aplica desconto de hospedagem e extras do pacote a uma cotação de apartamento. */
+export function applyPackage(q: Quote, pkg: Package, guests: Guests, ci: string, co: string): Quote {
+  const nights = q.nightsCount;
+  const child6Free = pkg.child6BedFree ? guests.kids6 * pricingExtras.child6 * nights : 0;
+  const lodging = q.total - child6Free;
+  const discount = Math.round(lodging * pkg.lodgingDiscount);
+  const people = guests.adults + guests.kids7;
+  const extras = pkg.perPerson * people + pkg.perChild6 * guests.kids6;
+  const total = lodging - discount + extras + pkg.perReservation;
+  let reason = q.reason;
+  if (!pkg.rooms.includes(q.room.slug)) reason = 'Este pacote não inclui este tipo de apartamento.';
+  const issue = packageDateIssue(pkg, ci, co);
+  if (!reason && issue) reason = issue;
+  return { ...q, total, ok: !reason, reason, pkg: { slug: pkg.slug, name: pkg.name, lodging, discount, extras, perReservation: pkg.perReservation, child6Free } };
+}
+
+/** "A partir de R$ X por pessoa": menor noite, apartamento mais barato aceito, 2 adultos, primeira data válida. */
+export function packageFromPrice(pkg: Package): number {
+  const nights = Math.min(...pkg.nights);
+  let ci: string;
+  if (pkg.fixedDates.length) ci = pkg.fixedDates[pkg.fixedDates.length - 1].checkin;
+  else {
+    ci = pkg.windows.length ? pkg.windows[0].start : addDays(todayIso(), 30);
+    if (pkg.startDays.length) for (let i = 0; i < 7 && !pkg.startDays.includes(weekday(ci)); i++) ci = addDays(ci, 1);
+  }
+  const dates = nightsBetween(ci, pkg.fixedDates.length ? pkg.fixedDates[pkg.fixedDates.length - 1].checkout : addDays(ci, nights));
+  const two: Guests = { adults: 2, kids6: 0, kids7: 0 };
+  const lodging = Math.min(...pkg.rooms.map((r) => dates.reduce((s, d) => s + nightPrice(r, d, two, dates.length).price, 0)));
+  const total = Math.round(lodging * (1 - pkg.lodgingDiscount)) + pkg.perPerson * 2 + pkg.perReservation;
+  return Math.ceil(total / 2 / 10) * 10;
+}
+
+/* ---------- Extras avulsos ---------- */
+export function extrasTotal(ids: string[], guests: Guests) {
+  const people = guests.adults + guests.kids7;
+  const items = ids.map((id) => getExtra(id)).filter(Boolean).map((e) => {
+    const qty = e!.per === 'pessoa' ? people : 1;
+    return { id: e!.id, name: e!.name, price: e!.price, per: e!.per, qty, subtotal: e!.price * qty };
+  });
+  return { items, total: items.reduce((s, i) => s + i.subtotal, 0) };
+}
+export const parseExtras = (v: unknown): string[] => {
+  if (Array.isArray(v)) return v.map(String).filter((x) => getExtra(x));
+  if (typeof v === 'string' && v) return v.split(',').map((x) => x.trim()).filter((x) => getExtra(x));
+  return [];
+};
 
 export const monthRange = (year: number, month: number) => ({
   start: `${year}-${String(month).padStart(2, '0')}-01`,
@@ -115,7 +184,16 @@ export function newCode() {
 export type NewReservation = {
   room: string; checkin: string; checkout: string; adults: number; kids6: number; kids7: number;
   name: string; phone: string; email?: string; notes?: string;
+  package?: string; extras?: string[];
 };
+
+/** Resolve pacote pelo slug; lança se não existir. */
+export function resolvePackage(slug?: string): Package | null {
+  if (!slug) return null;
+  const pkg = getPackage(slug);
+  if (!pkg) throw new Error('Pacote não encontrado.');
+  return pkg;
+}
 
 /** Valida o pedido e devolve a cotação; lança erro com mensagem para o hóspede. */
 export function validateReservation(input: NewReservation, quotes: Quote[]) {
@@ -147,4 +225,5 @@ export const parseGuests = (get: (k: string) => string | null | undefined): Gues
 export const quoteJson = (q: Quote) => ({
   slug: q.room.slug, name: q.room.name, short: q.room.short, description: q.room.description, beds: q.room.beds, photo: q.room.photos[0],
   maxOccupancy: q.room.maxOccupancy, available: q.available, total: q.total, extraPerNight: q.extraPerNight, nights: q.nights, nightsCount: q.nightsCount, minNights: q.minNights, ok: q.ok, reason: q.reason,
+  pkg: q.pkg,
 });

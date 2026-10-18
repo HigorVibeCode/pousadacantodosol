@@ -3,6 +3,8 @@ import { api } from './api';
 import { href, esc } from './nav';
 import { brl, fmtDate, guestsLabel } from './engine-core';
 import { getRoom } from '../data/rooms';
+import { getPackage } from '../data/packages';
+import { getExtra } from '../data/extras';
 
 export async function mountReserva(app: HTMLElement) {
   const q = new URLSearchParams(location.search);
@@ -15,9 +17,12 @@ export async function mountReserva(app: HTMLElement) {
   const room = getRoom(r.room_type);
   const total = r.total_cents / 100;
   const hosp = guestsLabel({ adults: r.adults, kids6: r.kids6, kids7: r.kids7 });
+  const pkg = r.package ? getPackage(r.package) : undefined;
+  let extrasList: string[] = [];
+  try { extrasList = (JSON.parse(r.extras || '[]') as string[]).map((id) => getExtra(id)?.name || id); } catch { /* sem extras */ }
   const statusLabel: Record<string, string> = { pendente: 'Aguardando confirmação da pousada', confirmada: 'Confirmada', cancelada: 'Cancelada' };
   const statusCls = r.status === 'confirmada' ? 'bg-palmeira/15 text-palmeira' : r.status === 'cancelada' ? 'bg-falesia/10 text-falesia' : 'bg-sol/20 text-mar';
-  const wa = `https://wa.me/${cfg.wa}?text=${encodeURIComponent(`Olá! Acabei de fazer o pedido de reserva ${code} pelo site: ${room?.name}, ${fmtDate(r.checkin)} a ${fmtDate(r.checkout)}, ${hosp}. Total ${brl(total)}. Como faço o pagamento?`)}`;
+  const wa = `https://wa.me/${cfg.wa}?text=${encodeURIComponent(`Olá! Acabei de fazer o pedido de reserva ${code} pelo site: ${pkg ? `pacote ${pkg.name}, ` : ''}${room?.name}, ${fmtDate(r.checkin)} a ${fmtDate(r.checkout)}, ${hosp}. Total ${brl(total)}. Como faço o pagamento?`)}`;
   app.innerHTML = `
     <p class="eyebrow">${nova ? 'Pedido recebido' : 'Sua reserva'}</p>
     <h1 class="mt-2 text-3xl font-extrabold md:text-4xl">${nova ? 'Quase lá. Agora é com a gente.' : `Reserva ${esc(code)}`}</h1>
@@ -28,6 +33,7 @@ export async function mountReserva(app: HTMLElement) {
         <span class="rounded-full px-3 py-1 text-xs font-semibold ${statusCls}">${esc(statusLabel[r.status] || r.status)}</span>
       </div>
       <dl class="mt-5 grid gap-3 text-sm sm:grid-cols-2">
+        ${pkg ? `<div class="sm:col-span-2"><dt class="text-neblina">Pacote</dt><dd class="font-semibold">${esc(pkg.name)}</dd></div>` : ''}
         <div><dt class="text-neblina">Acomodação</dt><dd class="font-semibold">${esc(room?.name)}</dd></div>
         <div><dt class="text-neblina">Hóspedes</dt><dd class="font-semibold">${esc(hosp)}</dd></div>
         <div><dt class="text-neblina">Chegada</dt><dd class="font-semibold">${fmtDate(r.checkin)} a partir das ${cfg.checkIn}</dd></div>
@@ -35,6 +41,8 @@ export async function mountReserva(app: HTMLElement) {
         <div><dt class="text-neblina">Nome</dt><dd class="font-semibold">${esc(r.guest_name)}</dd></div>
         <div><dt class="text-neblina">Total com café</dt><dd class="text-xl font-extrabold">${brl(total)}</dd></div>
       </dl>
+      ${pkg ? `<div class="mt-4 text-sm"><p class="text-neblina">Incluso no pacote</p><ul class="mt-1 grid gap-1 sm:grid-cols-2">${pkg.includes.map((i) => `<li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sol"></span>${esc(i)}</li>`).join('')}</ul></div>` : ''}
+      ${extrasList.length ? `<p class="mt-4 text-sm"><span class="text-neblina">Extras:</span> ${esc(extrasList.join(', '))}</p>` : ''}
       ${r.notes ? `<p class="mt-4 text-sm text-mar/80"><span class="text-neblina">Observação:</span> ${esc(r.notes)}</p>` : ''}
     </div>
     ${r.status !== 'cancelada' ? `<a href="${wa}" class="btn-sol mt-6 w-full sm:w-auto" data-origem="confirmacao" target="_blank" rel="noopener">Enviar o código pelo WhatsApp</a>` : ''}
