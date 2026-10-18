@@ -87,7 +87,7 @@ export const packages: Package[] = [
       { day: 'Dia 3', title: 'Nascer do sol', text: 'Trilha guiada cedo nas falésias e dia livre.' },
       { day: 'Dias 4 e 5', title: 'Nada marcado', text: 'Praia, rede e o transfer para o centro à noite, se der vontade.' },
     ],
-    photo: { src: '/images/pacotes/retiro-de-descanso.jpg', alt: 'Rede à sombra de coqueiros' },
+    photo: { src: '/images/pacotes/retiro-de-descanso.jpg', alt: 'Rede na varanda com vista para o mar' },
     seasonLabel: 'Março a junho',
   },
   {

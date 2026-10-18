@@ -147,6 +147,8 @@ export function createPicker(o: PickerOpts) {
   });
 
   function open(which: 'in' | 'out') {
+    // encerra a animação de entrada do herói: um ancestral animado prenderia a folha atrás do fundo escuro
+    document.querySelectorAll('[data-enter]').forEach((n) => n.removeAttribute('data-enter'));
     picking = which === 'out' && o.checkin.value ? 'out' : 'in';
     if (o.checkin.value) view = o.checkin.value.slice(0, 7);
     render();

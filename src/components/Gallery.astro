@@ -1,0 +1,31 @@
+---
+const fotos = [
+  { src: '/images/piscina.jpg', alt: 'Piscina com o mural das baleias', cap: 'Piscina' },
+  { src: '/images/varanda-vista.jpg', alt: 'Rede na varanda com vista para o mar', cap: 'Varanda com vista' },
+  { src: '/images/cafe.jpg', alt: 'Salão do café da manhã', cap: 'Café da manhã' },
+  { src: '/images/rooms/normal-2.jpg', alt: 'Apartamento com três camas', cap: 'Apartamento família' },
+  { src: '/images/recepcao.jpg', alt: 'Recepção e sala de estar', cap: 'Recepção' },
+  { src: '/images/centro.jpg', alt: 'Rua de restaurantes no centro histórico', cap: 'Centro, a 12 min a pé' },
+];
+---
+<section class="container-site" id="fotos">
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <p class="eyebrow">Por dentro</p>
+      <h2 class="mt-2 text-3xl font-extrabold md:text-4xl">Simples, limpa e a dez passos da piscina</h2>
+    </div>
+    <a href="/acomodacoes" class="btn-linha text-sm">Ver os apartamentos</a>
+  </div>
+  <ul class="mt-8 grid grid-cols-2 gap-3 md:grid-cols-3">
+    {fotos.map((f, i) => (
+      <li class:list={['group overflow-hidden rounded-[var(--radius-ficha)] bg-white', i === 0 && 'col-span-2 md:col-span-2 md:row-span-2']}>
+        <figure class="h-full">
+          <div class:list={['foto-placeholder overflow-hidden', i === 0 ? 'aspect-[16/10] md:h-full md:aspect-auto' : 'aspect-[4/3]']}>
+            <img src={f.src} alt={f.alt} class="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]" loading="lazy" onerror="this.remove()" />
+          </div>
+          <figcaption class="px-3 py-2 text-xs font-semibold text-mar/80">{f.cap}</figcaption>
+        </figure>
+      </li>
+    ))}
+  </ul>
+</section>

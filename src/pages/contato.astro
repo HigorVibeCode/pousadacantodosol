@@ -20,6 +20,9 @@ import { waDefault } from '../lib/format';
       </a>
     </div>
     {pousada.email && <p class="mt-4 text-sm text-mar/80">E-mail: <a href={`mailto:${pousada.email}`} class="font-semibold underline-offset-4 hover:underline">{pousada.email}</a></p>}
+    <figure class="foto-placeholder mt-10 overflow-hidden rounded-[var(--radius-ficha)] aspect-[16/9] lg:max-w-3xl">
+      <img src="/images/recepcao.jpg" alt="Recepção da pousada" class="h-full w-full object-cover" loading="lazy" onerror="this.remove()" />
+    </figure>
   </section>
   <div class="mt-16"><LocationBlock full /></div>
 </Base>
