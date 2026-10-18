@@ -45,7 +45,7 @@ export function createPicker(o: PickerOpts) {
   const loading = new Set<string>();
 
   const el = document.createElement('div');
-  el.className = inline ? 'ficha p-4' : 'picker-sheet ficha p-4';
+  el.className = inline ? 'ficha p-4 text-mar' : 'picker-sheet ficha p-4 text-mar';
   if (!inline) el.hidden = true;
   (o.mount || o.triggers!.checkin.closest('form')!).appendChild(el);
 
