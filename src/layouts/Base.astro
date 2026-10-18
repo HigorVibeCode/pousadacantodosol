@@ -17,7 +17,7 @@ interface Props {
   noSticky?: boolean;
 }
 const { title, description = pousada.description, image = '/images/og.jpg', schema = [], noSticky = false } = Astro.props;
-const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const canonical = new URL(Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/') || '/', siteUrl).href;
 const fullTitle = title.includes(pousada.name) ? title : `${title} · ${pousada.name}`;
 ---
 <!doctype html>
