@@ -1,0 +1,19 @@
+---
+import { waDefault } from '../lib/format';
+---
+<div id="barra-fixa" class="fixed inset-x-0 bottom-0 z-40 border-t border-mar/10 bg-white/95 p-3 backdrop-blur transition-transform md:hidden" style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom));">
+  <div class="flex gap-2">
+    <a href="/#reservar" class="btn-sol flex-1 text-sm">Ver disponibilidade</a>
+    <a href={waDefault('o site')} class="btn-linha !px-4 text-sm" data-origem="barra-fixa" aria-label="Falar no WhatsApp">WhatsApp</a>
+  </div>
+</div>
+<script>
+  // Esconde a barra enquanto o formulário de reserva está visível.
+  const bar = document.getElementById('barra-fixa');
+  const form = document.getElementById('reservar');
+  if (bar && form && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => {
+      bar.style.transform = e.isIntersecting ? 'translateY(110%)' : '';
+    }, { threshold: 0.2 }).observe(form);
+  }
+</script>

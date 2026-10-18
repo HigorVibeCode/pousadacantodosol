@@ -1,0 +1,38 @@
+---
+import { pousada } from '../data/pousada';
+import { fullAddress, waDefault } from '../lib/format';
+const year = new Date().getFullYear();
+---
+<footer class="mt-20 bg-mar text-espuma">
+  <div class="container-site grid gap-10 py-14 md:grid-cols-3">
+    <div>
+      <p class="display text-2xl font-bold">Pousada Orla do Sol</p>
+      <p class="mt-2 max-w-xs text-sm text-espuma/75">{pousada.tagline}.</p>
+      <p class="mt-4 text-sm text-espuma/75">Check-in {pousada.checkIn} · Check-out {pousada.checkOut}</p>
+    </div>
+    <address class="not-italic text-sm leading-relaxed text-espuma/85">
+      <p class="eyebrow !text-sol">Endereço</p>
+      <p class="mt-2">{fullAddress()}</p>
+      <p class="mt-3"><a href={`tel:+${pousada.whatsapp}`} class="underline-offset-4 hover:underline" data-origem="rodape">{pousada.phoneDisplay}</a></p>
+      <p><a href={waDefault('o site')} class="underline-offset-4 hover:underline" data-origem="rodape">WhatsApp</a></p>
+      {pousada.email && <p><a href={`mailto:${pousada.email}`} class="underline-offset-4 hover:underline">{pousada.email}</a></p>}
+      <p class="mt-3"><a href={`https://www.instagram.com/${pousada.instagram}/`} rel="noopener" target="_blank" class="underline-offset-4 hover:underline">@{pousada.instagram}</a></p>
+    </address>
+    <nav class="text-sm" aria-label="Rodapé">
+      <p class="eyebrow !text-sol">Páginas</p>
+      <ul class="mt-2 space-y-1.5 text-espuma/85">
+        <li><a href="/acomodacoes" class="hover:underline underline-offset-4">Acomodações</a></li>
+        <li><a href="/localizacao" class="hover:underline underline-offset-4">Localização e o que fazer</a></li>
+        <li><a href="/faq" class="hover:underline underline-offset-4">Dúvidas frequentes</a></li>
+        <li><a href="/contato" class="hover:underline underline-offset-4">Contato</a></li>
+        <li><a href="/privacidade" class="hover:underline underline-offset-4">Privacidade</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="border-t border-espuma/15">
+    <div class="container-site flex flex-col gap-1 py-5 text-xs text-espuma/60 sm:flex-row sm:justify-between">
+      <p>© {year} {pousada.name}. {pousada.cnpj && `CNPJ ${pousada.cnpj}.`}</p>
+      <p>Prado, extremo sul da Bahia.</p>
+    </div>
+  </div>
+</footer>

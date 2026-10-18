@@ -1,0 +1,39 @@
+---
+import { pousada } from '../data/pousada';
+import { waDefault } from '../lib/format';
+const nav = [
+  { href: '/acomodacoes', label: 'Acomodações' },
+  { href: '/localizacao', label: 'Localização' },
+  { href: '/faq', label: 'Dúvidas' },
+  { href: '/contato', label: 'Contato' },
+];
+const path = Astro.url.pathname;
+---
+<header class="sticky top-0 z-40 border-b border-mar/10 bg-espuma/90 backdrop-blur">
+  <div class="container-site flex h-16 items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-2.5" aria-label={`${pousada.name}, página inicial`}>
+      <span class="relative block h-7 w-7 overflow-hidden rounded-full bg-mar" aria-hidden="true">
+        <span class="absolute left-1/2 top-[55%] h-4 w-4 -translate-x-1/2 rounded-full bg-sol"></span>
+        <span class="absolute inset-x-0 top-[55%] h-px bg-espuma/70"></span>
+      </span>
+      <span class="display text-lg font-bold leading-none">Orla do Sol</span>
+      <span class="hidden text-xs text-neblina sm:inline">Prado · BA</span>
+    </a>
+    <nav class="hidden items-center gap-6 text-sm font-medium md:flex" aria-label="Principal">
+      {nav.map((n) => (
+        <a href={n.href} class:list={['hover:text-mar-claro', path.startsWith(n.href) && 'text-mar-claro']} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>
+      ))}
+    </nav>
+    <div class="flex items-center gap-2">
+      <a href={`tel:+${pousada.whatsapp}`} class="hidden text-sm font-semibold lg:inline" data-origem="cabecalho">{pousada.phoneDisplay}</a>
+      <a href="/#reservar" class="btn-sol !py-2.5 !px-5 text-sm">Reservar</a>
+      <details class="relative md:hidden">
+        <summary class="btn-linha !px-3 !py-2.5 text-sm" aria-label="Abrir menu">Menu</summary>
+        <nav class="absolute right-0 mt-2 w-56 ficha p-2 text-sm font-medium" aria-label="Principal (celular)">
+          {nav.map((n) => <a href={n.href} class="block rounded-lg px-3 py-2.5 hover:bg-espuma">{n.label}</a>)}
+          <a href={waDefault('o site')} class="block rounded-lg px-3 py-2.5 text-palmeira hover:bg-espuma" data-origem="menu">WhatsApp</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>

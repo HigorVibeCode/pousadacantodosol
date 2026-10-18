@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import LocationBlock from '../components/LocationBlock.astro';
+import { pousada } from '../data/pousada';
+import { waDefault } from '../lib/format';
+---
+<Base title="Contato" description={`Fale com a ${pousada.name} em Prado, BA, pelo WhatsApp ${pousada.phoneDisplay}. Check-in ${pousada.checkIn}, check-out ${pousada.checkOut}.`} noSticky>
+  <section class="container-site pt-12 md:pt-16">
+    <p class="eyebrow">Contato</p>
+    <h1 class="mt-2 text-4xl font-extrabold md:text-5xl">Um número só, para tudo</h1>
+    <p class="mt-4 max-w-xl text-lg text-mar/80">Cotação, reserva, dúvida sobre pet ou horário de chegada: é no mesmo WhatsApp, respondido pela equipe da pousada das 7h às 22h.</p>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:max-w-3xl">
+      <a href={waDefault('a página de contato')} class="ficha flex items-center justify-between p-5 hover:shadow-ficha" data-origem="contato">
+        <div><p class="text-xs text-neblina">WhatsApp</p><p class="text-xl font-bold">{pousada.phoneDisplay}</p></div>
+        <span class="btn-sol !py-2 !px-4 text-sm">Abrir conversa</span>
+      </a>
+      <a href={`tel:+${pousada.whatsapp}`} class="ficha flex items-center justify-between p-5 hover:shadow-ficha" data-origem="contato">
+        <div><p class="text-xs text-neblina">Ligar</p><p class="text-xl font-bold">{pousada.phoneDisplay}</p></div>
+        <span class="btn-linha !py-2 !px-4 text-sm">Chamar</span>
+      </a>
+    </div>
+    {pousada.email && <p class="mt-4 text-sm text-mar/80">E-mail: <a href={`mailto:${pousada.email}`} class="font-semibold underline-offset-4 hover:underline">{pousada.email}</a></p>}
+  </section>
+  <div class="mt-16"><LocationBlock full /></div>
+</Base>

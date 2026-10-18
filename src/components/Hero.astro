@@ -1,0 +1,35 @@
+---
+import { pousada } from '../data/pousada';
+import BookingBar from './BookingBar.astro';
+---
+<section class="relative overflow-hidden bg-mar text-espuma">
+  <!-- Foto do herói: trocar o placeholder por /images/hero.jpg (piscina com a praia ao fundo, 1920x1080) -->
+  <div class="absolute inset-0 foto-placeholder" aria-hidden="true">
+    <img src="/images/hero.jpg" alt="" class="h-full w-full object-cover" loading="eager" fetchpriority="high" onerror="this.remove()" />
+    <div class="absolute inset-0 bg-gradient-to-t from-mar-fundo via-mar-fundo/50 to-transparent"></div>
+    <!-- o sol nasce no horizonte -->
+    <div class="sol-heroi absolute left-[72%] top-[6%] h-24 w-24 rounded-full bg-sol opacity-90 blur-[1px] md:left-[78%] md:top-[12%] md:h-40 md:w-40" style="box-shadow: 0 0 80px 30px rgb(245 165 36 / 0.35)"></div>
+    <div class="absolute inset-x-0 top-[calc(6%+6rem)] h-px bg-espuma/30 md:top-[calc(12%+10rem)]"></div>
+  </div>
+
+  <div class="container-site relative pb-10 pt-28 md:pb-16 md:pt-44">
+    <p class="eyebrow !text-sol">Novo Prado · Prado · Bahia</p>
+    <h1 class="mt-3 max-w-3xl text-[2.6rem] font-extrabold sm:text-6xl md:text-7xl">
+      A praia fica a dois minutos.<br class="hidden sm:block" /> A piscina, a dez passos.
+    </h1>
+    <p class="mt-5 max-w-xl text-lg text-espuma/85">
+      Pousada familiar com {pousada.roomsTotal} apartamentos com varanda, café da manhã incluso e estacionamento dentro do terreno. Chegue de carro, deixe a chave e vá para a Praia Novo Prado a pé.
+    </p>
+    <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+      <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 font-semibold backdrop-blur">
+        <svg class="h-4 w-4 text-sol" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L10 14.9l-5.3 2.8 1.1-5.9L1.5 7.7l5.9-.8z"/></svg>
+        {pousada.rating.value.toString().replace('.', ',')} no {pousada.rating.source}
+      </span>
+      <span class="text-espuma/75">{pousada.rating.count} avaliações</span>
+      <span class="text-espuma/75">Check-in {pousada.checkIn} · Check-out {pousada.checkOut}</span>
+    </div>
+    <div class="mt-8 md:mt-10">
+      <BookingBar />
+    </div>
+  </div>
+</section>

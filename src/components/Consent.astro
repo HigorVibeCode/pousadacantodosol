@@ -1,0 +1,39 @@
+---
+import { gtmId } from '../data/pousada';
+---
+{gtmId && (
+  <div id="consent" class="fixed inset-x-3 bottom-20 z-50 hidden ficha p-4 text-sm sm:left-auto sm:right-4 sm:bottom-4 sm:max-w-sm">
+    <p>Usamos cookies para medir visitas e melhorar o site. Você escolhe.</p>
+    <div class="mt-3 flex gap-2">
+      <button type="button" class="btn-mar !py-2 !px-4 text-sm" data-consent="sim">Aceitar</button>
+      <button type="button" class="btn-linha !py-2 !px-4 text-sm" data-consent="nao">Só o essencial</button>
+      <a href="/privacidade" class="ml-auto self-center text-xs underline underline-offset-4">Saiba mais</a>
+    </div>
+  </div>
+  <script is:inline define:vars={{ gtmId }}>
+    (function () {
+      var KEY = 'ods:consent';
+      var box = document.getElementById('consent');
+      function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+      function set(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+      function loadGtm() {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtm.js?id=' + gtmId;
+        document.head.appendChild(s);
+      }
+      var c = get();
+      if (c === 'sim') loadGtm();
+      else if (c !== 'nao' && box) box.classList.remove('hidden');
+      box && box.querySelectorAll('[data-consent]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          set(b.dataset.consent);
+          box.classList.add('hidden');
+          if (b.dataset.consent === 'sim') loadGtm();
+        });
+      });
+    })();
+  </script>
+)}

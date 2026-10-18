@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/* Paleta tirada de Prado: mar verde-azulado, areia clara, sol das 17h, falésia. */
+@theme {
+  --color-mar: #0e3b43;
+  --color-mar-claro: #1f7a86;
+  --color-mar-fundo: #082a30;
+  --color-espuma: #f4f8f6;
+  --color-areia: #ecdfc3;
+  --color-areia-clara: #f7f0e1;
+  --color-sol: #f5a524;
+  --color-sol-forte: #e08a0b;
+  --color-falesia: #b5482a;
+  --color-palmeira: #2f6b4e;
+  --color-neblina: #5c7378;
+
+  --font-display: "Bricolage Grotesque", "Avenir Next Condensed", "Arial Narrow", sans-serif;
+  --font-sans: "Figtree", "Segoe UI", system-ui, sans-serif;
+
+  --radius-ficha: 1.25rem;
+  --shadow-ficha: 0 20px 50px -20px rgb(14 59 67 / 0.35), 0 2px 6px rgb(14 59 67 / 0.08);
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+  body {
+    @apply bg-espuma text-mar font-sans antialiased;
+    font-feature-settings: "tnum" 1, "ss01" 1;
+  }
+  h1, h2, h3, .display {
+    font-family: var(--font-display);
+    font-variation-settings: "wdth" 90, "opsz" 48;
+    letter-spacing: -0.015em;
+    line-height: 1.02;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-sol);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  ::selection { background: var(--color-sol); color: var(--color-mar-fundo); }
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold transition
+         active:scale-[0.98] disabled:opacity-60 disabled:pointer-events-none;
+  min-height: 3rem;
+}
+
+@layer components {
+  .container-site { @apply mx-auto w-full max-w-6xl px-4 sm:px-6; }
+  .btn-sol { @apply btn bg-sol text-mar-fundo hover:bg-sol-forte shadow-[0_8px_24px_-8px_rgb(245_165_36/0.7)]; }
+  .btn-mar { @apply btn bg-mar text-espuma hover:bg-mar-fundo; }
+  .btn-linha { @apply btn border-2 border-mar/20 text-mar hover:border-mar/60 bg-transparent; }
+  .eyebrow { @apply text-xs font-semibold uppercase tracking-[0.18em] text-mar-claro; }
+  .ficha { @apply rounded-[var(--radius-ficha)] bg-white shadow-ficha; }
+  .campo {
+    @apply w-full rounded-xl border border-mar/15 bg-espuma px-3.5 py-3 text-mar
+           placeholder:text-neblina focus:border-mar-claro focus:bg-white;
+    min-height: 3rem;
+  }
+  .rotulo { @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-neblina; }
+}
+
+/* Assinatura: o horizonte com o sol. Usado como divisor entre seções. */
+.horizonte {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(14 59 67 / 0.25) 20%, rgb(14 59 67 / 0.25) 80%, transparent);
+}
+.horizonte::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 28px;
+  height: 14px;
+  transform: translateX(-50%);
+  border-radius: 28px 28px 0 0;
+  background: var(--color-sol);
+}
+
+/* O sol nasce uma vez, no herói. */
+@keyframes nascer {
+  from { transform: translate(-50%, 60%) scale(0.9); opacity: 0.6; }
+  to   { transform: translate(-50%, 0) scale(1); opacity: 1; }
+}
+.sol-heroi { animation: nascer 1.6s cubic-bezier(.2,.7,.2,1) both; }
+
+/* Fotos ainda não entregues: um gradiente de mar e areia ocupa o lugar. */
+.foto-placeholder {
+  background:
+    radial-gradient(120% 80% at 50% 110%, var(--color-areia) 0 38%, transparent 39%),
+    linear-gradient(180deg, #8fd0d8 0%, #3d9ea9 55%, #1f7a86 100%);
+}
+
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] .chevron { transform: rotate(180deg); }

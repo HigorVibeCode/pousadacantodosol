@@ -1,0 +1,71 @@
+---
+import Base from '../../layouts/Base.astro';
+import BookingBar from '../../components/BookingBar.astro';
+import RoomCard from '../../components/RoomCard.astro';
+import { rooms } from '../../data/rooms';
+import { pousada, siteUrl } from '../../data/pousada';
+import { brl } from '../../lib/format';
+
+export function getStaticPaths() {
+  return rooms.map((room) => ({ params: { slug: room.slug }, props: { room } }));
+}
+const { room } = Astro.props;
+const others = rooms.filter((r) => r.slug !== room.slug);
+const schema = [{
+  '@context': 'https://schema.org',
+  '@type': 'HotelRoom',
+  name: room.name,
+  description: room.description,
+  url: `${siteUrl}/acomodacoes/${room.slug}`,
+  bed: { '@type': 'BedDetails', typeOfBed: room.beds },
+  occupancy: { '@type': 'QuantitativeValue', maxValue: room.capacity.total, unitCode: 'C62' },
+  amenityFeature: room.amenities.map((name) => ({ '@type': 'LocationFeatureSpecification', name, value: true })),
+  containedInPlace: { '@id': `${siteUrl}/#pousada` },
+}];
+---
+<Base title={`${room.name}`} description={`${room.name} na ${pousada.name}, Prado BA: ${room.beds}, até ${room.capacity.total} pessoas, varanda e ar-condicionado. ${room.ideal}.`} schema={schema}>
+  <nav class="container-site pt-6 text-sm text-neblina" aria-label="Você está em">
+    <a href="/" class="hover:underline">Início</a> › <a href="/acomodacoes" class="hover:underline">Acomodações</a> › <span class="text-mar">{room.name}</span>
+  </nav>
+  <section class="container-site mt-6 grid gap-8 lg:grid-cols-[1.3fr_1fr]">
+    <div>
+      <div class="grid gap-3 sm:grid-cols-2">
+        {room.photos.map((p, i) => (
+          <figure class:list={['foto-placeholder overflow-hidden rounded-[var(--radius-ficha)]', i === 0 && 'sm:col-span-2 aspect-[16/10]', i > 0 && 'aspect-[4/3]']}>
+            <img src={p.src} alt={p.alt} class="h-full w-full object-cover" loading={i === 0 ? 'eager' : 'lazy'} onerror="this.remove()" />
+          </figure>
+        ))}
+      </div>
+      <p class="eyebrow mt-8">{room.short}</p>
+      <h1 class="mt-2 text-4xl font-extrabold md:text-5xl">{room.name}</h1>
+      <p class="mt-4 text-lg text-mar/85">{room.description}</p>
+      <dl class="mt-6 grid grid-cols-2 gap-4 text-sm sm:grid-cols-3">
+        <div class="rounded-xl bg-white p-4"><dt class="text-neblina">Capacidade</dt><dd class="font-semibold">até {room.capacity.total} pessoas</dd></div>
+        <div class="rounded-xl bg-white p-4"><dt class="text-neblina">Camas</dt><dd class="font-semibold">{room.beds}</dd></div>
+        <div class="rounded-xl bg-white p-4"><dt class="text-neblina">Check-in / out</dt><dd class="font-semibold">{pousada.checkIn} / {pousada.checkOut}</dd></div>
+      </dl>
+      <h2 class="mt-8 text-xl font-bold">No apartamento</h2>
+      <ul class="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+        {room.amenities.map((a) => <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-sol"></span>{a}</li>)}
+      </ul>
+      <h2 class="mt-8 text-xl font-bold">Na pousada</h2>
+      <ul class="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+        {pousada.amenities.map((a) => <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-mar-claro"></span>{a}</li>)}
+      </ul>
+    </div>
+    <aside class="lg:sticky lg:top-24 lg:self-start">
+      <div class="mb-3 flex items-baseline justify-between">
+        <p class="text-sm text-neblina">Diária com café da manhã</p>
+        <p class="text-2xl font-extrabold">{room.priceFrom ? brl(room.priceFrom) : <span class="text-base text-mar-claro">Consultar tarifa</span>}</p>
+      </div>
+      <BookingBar room={room.name} compact id="reservar" />
+      <p class="mt-3 text-xs text-neblina">Política de cancelamento e valor para crianças são enviados junto com a cotação.</p>
+    </aside>
+  </section>
+  <section class="container-site mt-16">
+    <h2 class="text-2xl font-extrabold">Precisa de mais espaço?</h2>
+    <ul class="mt-6 grid gap-4 sm:grid-cols-3">
+      {others.map((r) => <li><RoomCard room={r} /></li>)}
+    </ul>
+  </section>
+</Base>

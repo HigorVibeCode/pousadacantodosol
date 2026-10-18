@@ -1,0 +1,16 @@
+---
+import type { Faq } from '../data/faq';
+interface Props { items: Faq[] }
+const { items } = Astro.props;
+---
+<div class="divide-y divide-mar/10 rounded-[var(--radius-ficha)] border border-mar/10 bg-white">
+  {items.map((f) => (
+    <details class="group px-5">
+      <summary class="flex items-center justify-between gap-4 py-4 font-semibold">
+        {f.q}
+        <svg class="chevron h-5 w-5 shrink-0 text-mar-claro transition" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </summary>
+      <p class="pb-5 text-mar/80">{f.a}</p>
+    </details>
+  ))}
+</div>

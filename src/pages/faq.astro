@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import FaqList from '../components/FaqList.astro';
+import { faq } from '../data/faq';
+import { waDefault } from '../lib/format';
+const schema = [{
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+}];
+---
+<Base title="Dúvidas frequentes" description="Check-in, check-out, café da manhã, estacionamento, crianças, pets e cancelamento na Pousada Orla do Sol, Prado BA." schema={schema}>
+  <section class="container-site pt-12 md:pt-16">
+    <p class="eyebrow">Dúvidas frequentes</p>
+    <h1 class="mt-2 max-w-3xl text-4xl font-extrabold md:text-5xl">O que todo mundo pergunta antes de reservar</h1>
+    <div class="mt-8 max-w-3xl"><FaqList items={faq} /></div>
+    <p class="mt-8 text-mar/80">Não achou a resposta? <a href={waDefault('a página de dúvidas')} class="font-semibold text-mar-claro underline-offset-4 hover:underline" data-origem="faq">Pergunte no WhatsApp</a>.</p>
+  </section>
+</Base>

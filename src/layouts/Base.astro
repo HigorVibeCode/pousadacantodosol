@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StickyBar from '../components/StickyBar.astro';
+import Consent from '../components/Consent.astro';
+import Schema from '../components/Schema.astro';
+import { pousada, siteUrl } from '../data/pousada';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  /** JSON-LD extra além do LodgingBusiness padrão */
+  schema?: Record<string, unknown>[];
+  /** esconde a barra fixa inferior (ex.: página de contato) */
+  noSticky?: boolean;
+}
+const { title, description = pousada.description, image = '/images/og.jpg', schema = [], noSticky = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const fullTitle = title.includes(pousada.name) ? title : `${title} · ${pousada.name}`;
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#0e3b43" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={pousada.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(image, siteUrl).href} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Figtree:ital,wght@0,400..700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <Schema extra={schema} />
+  </head>
+  <body class="min-h-dvh flex flex-col">
+    <a href="#conteudo" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-sol focus:px-4 focus:py-2 focus:rounded-full">Pular para o conteúdo</a>
+    <Header />
+    <main id="conteudo" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+    {!noSticky && <StickyBar />}
+    <Consent />
+    <script>
+      import { initContactTracking } from '../lib/booking';
+      initContactTracking();
+    </script>
+  </body>
+</html>

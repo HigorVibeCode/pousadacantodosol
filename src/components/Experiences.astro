@@ -1,0 +1,17 @@
+---
+import { experiences } from '../data/experiences';
+---
+<section class="container-site" id="experiencias">
+  <p class="eyebrow">Prado além da piscina</p>
+  <h2 class="mt-2 max-w-2xl text-3xl font-extrabold md:text-4xl">Base para baleias, falésias e o centro histórico</h2>
+  <ul class="mt-8 grid gap-4 md:grid-cols-3">
+    {experiences.map((x) => (
+      <li class="group rounded-[var(--radius-ficha)] border border-mar/10 bg-white p-5 transition hover:border-mar/30">
+        <p class="text-xs font-semibold uppercase tracking-wider text-falesia">{x.season}</p>
+        <h3 class="mt-2 text-xl font-bold">{x.title}</h3>
+        <p class="mt-2 text-sm text-mar/80">{x.text}</p>
+        <a href={x.href} class="mt-4 inline-block text-sm font-semibold text-mar-claro underline-offset-4 group-hover:underline">Saiba mais</a>
+      </li>
+    ))}
+  </ul>
+</section>

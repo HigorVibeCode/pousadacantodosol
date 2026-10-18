@@ -1,0 +1,28 @@
+---
+import { pousada } from '../data/pousada';
+import { fullAddress } from '../lib/format';
+interface Props { full?: boolean }
+const { full = false } = Astro.props;
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(pousada.mapsQuery)}&z=16&output=embed`;
+---
+<section class="container-site" id="localizacao">
+  <div class="grid gap-8 md:grid-cols-2 md:items-center">
+    <div>
+      <p class="eyebrow">Onde fica</p>
+      <h2 class="mt-2 text-3xl font-extrabold md:text-4xl">Na rua da praia, não na estrada</h2>
+      <p class="mt-3 text-mar/80">{fullAddress()}. Rua tranquila, a um quarteirão da orla do Novo Prado. Quem vem de carro estaciona dentro da pousada.</p>
+      <dl class="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+        {pousada.distances.map((d) => (
+          <div class="border-t border-mar/10 pt-2"><dt class="text-neblina">{d.label}</dt><dd class="font-semibold">{d.value}</dd></div>
+        ))}
+      </dl>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(pousada.mapsQuery)}`} target="_blank" rel="noopener" class="btn-mar text-sm">Como chegar</a>
+        {!full && <a href="/localizacao" class="btn-linha text-sm">O que fazer em Prado</a>}
+      </div>
+    </div>
+    <div class="ficha overflow-hidden">
+      <iframe src={mapSrc} title="Mapa da Pousada Orla do Sol" class="aspect-[4/3] w-full" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>

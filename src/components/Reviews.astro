@@ -1,0 +1,26 @@
+---
+import { reviews } from '../data/reviews';
+import { pousada } from '../data/pousada';
+const stars = (n: number) => '★'.repeat(n) + '☆'.repeat(5 - n);
+const fmt = (d: string) => new Date(d + '-01T12:00:00').toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' });
+const hasSample = reviews.some((r) => r.sample);
+---
+<section class="container-site" id="avaliacoes">
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <p class="eyebrow">Quem já ficou</p>
+      <h2 class="mt-2 text-3xl font-extrabold md:text-4xl">{pousada.rating.value.toString().replace('.', ',')} de 5 em {pousada.rating.count} avaliações no {pousada.rating.source}</h2>
+    </div>
+    <a href={`https://www.google.com/search?q=${encodeURIComponent(pousada.name + ' Prado')}`} target="_blank" rel="noopener" class="btn-linha text-sm">Ver todas no Google</a>
+  </div>
+  {hasSample && <p class="mt-3 rounded-lg bg-sol/15 px-3 py-2 text-xs text-mar"><strong>Rascunho:</strong> trechos de exemplo. Substituir por avaliações reais em <code>src/data/reviews.ts</code> antes de publicar.</p>}
+  <ul class="mt-8 grid gap-4 md:grid-cols-3">
+    {reviews.map((r) => (
+      <li class="ficha flex flex-col p-5">
+        <p class="text-sol" aria-label={`${r.rating} de 5`}>{stars(r.rating)}</p>
+        <blockquote class="mt-3 flex-1 text-mar/90">“{r.text}”</blockquote>
+        <footer class="mt-4 text-xs text-neblina"><span class="font-semibold text-mar">{r.author}</span> · {r.origin} · {fmt(r.date)} · {r.source}</footer>
+      </li>
+    ))}
+  </ul>
+</section>

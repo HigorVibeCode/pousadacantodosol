@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import TrustBar from '../components/TrustBar.astro';
+import RoomCard from '../components/RoomCard.astro';
+import WhyDirect from '../components/WhyDirect.astro';
+import Reviews from '../components/Reviews.astro';
+import LocationBlock from '../components/LocationBlock.astro';
+import Experiences from '../components/Experiences.astro';
+import FaqList from '../components/FaqList.astro';
+import Horizonte from '../components/Horizonte.astro';
+import { rooms } from '../data/rooms';
+import { faq } from '../data/faq';
+import { pousada } from '../data/pousada';
+---
+<Base title={`${pousada.name} · Pousada em Prado, Bahia, a 2 minutos da Praia Novo Prado`} description={pousada.description}>
+  <Hero />
+  <div class="pt-6 md:pt-8"><TrustBar /></div>
+
+  <Horizonte />
+
+  <section class="container-site" id="acomodacoes">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="eyebrow">Acomodações</p>
+        <h2 class="mt-2 text-3xl font-extrabold md:text-4xl">{pousada.roomsTotal} apartamentos, do casal ao grupo de seis</h2>
+      </div>
+      <a href="/acomodacoes" class="btn-linha text-sm">Comparar todas</a>
+    </div>
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {rooms.map((r) => <li><RoomCard room={r} /></li>)}
+    </ul>
+  </section>
+
+  <Horizonte />
+  <WhyDirect />
+  <Horizonte />
+  <Reviews />
+  <Horizonte />
+  <LocationBlock />
+  <Horizonte />
+  <Experiences />
+  <Horizonte />
+
+  <section class="container-site" id="duvidas">
+    <div class="md:grid md:grid-cols-3 md:gap-10">
+      <div>
+        <p class="eyebrow">Dúvidas</p>
+        <h2 class="mt-2 text-3xl font-extrabold md:text-4xl">Antes de perguntar no WhatsApp</h2>
+        <a href="/faq" class="mt-4 inline-block text-sm font-semibold text-mar-claro underline-offset-4 hover:underline">Ver todas as dúvidas</a>
+      </div>
+      <div class="mt-6 md:col-span-2 md:mt-0"><FaqList items={faq.slice(0, 5)} /></div>
+    </div>
+  </section>
+</Base>

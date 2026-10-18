@@ -1,0 +1,47 @@
+---
+import { pousada, siteUrl } from '../data/pousada';
+import { rooms } from '../data/rooms';
+interface Props { extra?: Record<string, unknown>[] }
+const { extra = [] } = Astro.props;
+
+const lodging = {
+  '@context': 'https://schema.org',
+  '@type': 'LodgingBusiness',
+  '@id': `${siteUrl}/#pousada`,
+  name: pousada.name,
+  description: pousada.description,
+  url: siteUrl,
+  telephone: `+${pousada.whatsapp}`,
+  image: [`${siteUrl}/images/og.jpg`],
+  priceRange: '$$',
+  checkinTime: pousada.checkIn,
+  checkoutTime: pousada.checkOut,
+  numberOfRooms: pousada.roomsTotal,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: pousada.address.street,
+    addressLocality: pousada.address.city,
+    addressRegion: pousada.address.state,
+    postalCode: pousada.address.postalCode,
+    addressCountry: pousada.address.country,
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: pousada.geo.lat, longitude: pousada.geo.lng },
+  amenityFeature: pousada.amenities.map((name) => ({ '@type': 'LocationFeatureSpecification', name, value: true })),
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: pousada.rating.value,
+    reviewCount: pousada.rating.count,
+    bestRating: 5,
+  },
+  sameAs: [`https://www.instagram.com/${pousada.instagram}/`],
+  containsPlace: rooms.map((r) => ({
+    '@type': 'HotelRoom',
+    name: r.name,
+    url: `${siteUrl}/acomodacoes/${r.slug}`,
+    bed: { '@type': 'BedDetails', typeOfBed: r.beds },
+    occupancy: { '@type': 'QuantitativeValue', maxValue: r.capacity.total, unitCode: 'C62' },
+  })),
+};
+const all = [lodging, ...extra];
+---
+<script type="application/ld+json" set:html={JSON.stringify(all)} />

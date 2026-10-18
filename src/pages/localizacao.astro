@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import LocationBlock from '../components/LocationBlock.astro';
+import Horizonte from '../components/Horizonte.astro';
+import { pousada } from '../data/pousada';
+import { waLink } from '../lib/format';
+---
+<Base title="Localização e o que fazer em Prado" description={`Como chegar à ${pousada.name} em Prado, BA, e o que fazer na região: baleias-jubarte de julho a novembro, praias, falésias e centro histórico.`}>
+  <div class="pt-12 md:pt-16"><LocationBlock full /></div>
+  <Horizonte />
+  <section class="container-site" id="como-chegar">
+    <p class="eyebrow">Como chegar</p>
+    <h2 class="mt-2 text-3xl font-extrabold md:text-4xl">De carro, de ônibus ou de avião</h2>
+    <div class="mt-6 grid gap-6 md:grid-cols-3">
+      <div class="ficha p-5"><h3 class="font-bold">De carro</h3><p class="mt-2 text-sm text-mar/80">Pela BR-101 até Itamaraju, depois BA-489 por cerca de 50 km até Prado. De Belo Horizonte são cerca de 11 horas, de Vitória cerca de 6. Estacionamento gratuito na pousada.</p></div>
+      <div class="ficha p-5"><h3 class="font-bold">De avião</h3><p class="mt-2 text-sm text-mar/80">O aeroporto mais próximo é Porto Seguro (BPS), a cerca de 2h30 de carro. Há transfers e locadoras no aeroporto. Teixeira de Freitas fica a 1h30.</p></div>
+      <div class="ficha p-5"><h3 class="font-bold">De ônibus</h3><p class="mt-2 text-sm text-mar/80">Linhas regulares chegam à rodoviária de Prado a partir de Itamaraju e Teixeira de Freitas. Da rodoviária até a pousada são poucos minutos de táxi ou mototáxi.</p></div>
+    </div>
+  </section>
+  <Horizonte />
+  <section class="container-site space-y-12">
+    <article id="baleias" class="scroll-mt-24 md:grid md:grid-cols-3 md:gap-10">
+      <div><p class="text-xs font-semibold uppercase tracking-wider text-falesia">Julho a novembro</p><h2 class="mt-2 text-3xl font-extrabold">Baleias-jubarte</h2></div>
+      <div class="mt-3 md:col-span-2 md:mt-0 text-mar/85 space-y-3">
+        <p>Entre julho e novembro as jubartes passam pela costa de Prado para se reproduzir, com pico em agosto e setembro. O passeio de barco sai do cais do centro, dura cerca de meio período e é feito por operadores autorizados.</p>
+        <p>Hospedando-se na Orla do Sol, pedimos a reserva do passeio para você e combinamos o café mais cedo no dia da saída.</p>
+        <a href={waLink('Olá! Quero hospedagem na Orla do Sol com passeio de baleias. Quais datas vocês indicam?')} class="btn-mar text-sm" data-origem="baleias">Montar pacote de baleias</a>
+      </div>
+    </article>
+    <article id="praias" class="scroll-mt-24 md:grid md:grid-cols-3 md:gap-10">
+      <div><p class="text-xs font-semibold uppercase tracking-wider text-falesia">O ano todo</p><h2 class="mt-2 text-3xl font-extrabold">Praias e falésias</h2></div>
+      <div class="mt-3 md:col-span-2 md:mt-0 text-mar/85 space-y-3">
+        <p>A Praia Novo Prado, em frente à pousada, tem mar calmo, barracas e coqueiros. A Praia do Centro fica a 12 minutos a pé, na foz do rio Jucuruçu. Mais ao sul, as falésias coloridas de Cumuruxatiba e a Reserva Extrativista de Corumbau fazem um bate-volta de um dia.</p>
+      </div>
+    </article>
+    <article id="centro" class="scroll-mt-24 md:grid md:grid-cols-3 md:gap-10">
+      <div><p class="text-xs font-semibold uppercase tracking-wider text-falesia">Outubro tem festival</p><h2 class="mt-2 text-3xl font-extrabold">Centro histórico e gastronomia</h2></div>
+      <div class="mt-3 md:col-span-2 md:mt-0 text-mar/85 space-y-3">
+        <p>Prado é uma das cidades mais antigas da Bahia, com casario colonial e a Igreja de Nossa Senhora da Purificação, do século 18. A beira do rio concentra restaurantes de frutos do mar e moqueca. Em outubro, o Festival Gastronômico lota a cidade: reserve com antecedência.</p>
+      </div>
+    </article>
+  </section>
+</Base>
