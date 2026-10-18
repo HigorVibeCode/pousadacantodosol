@@ -1,15 +1,22 @@
 ---
+import fs from 'node:fs';
 import { pousada } from '../data/pousada';
 import BookingBar from './BookingBar.astro';
+// Com foto real no lugar, o sol decorativo sai de cena e o gradiente só garante a leitura do texto.
+const hasPhoto = fs.existsSync('public/images/hero.jpg');
 ---
 <section class="relative overflow-x-clip bg-mar text-espuma">
   <!-- Foto do herói: trocar o placeholder por /images/hero.jpg (piscina com a praia ao fundo, 1920x1080) -->
   <div class="absolute inset-0 foto-placeholder" aria-hidden="true">
-    <img src="/images/hero.jpg" alt="" class="h-full w-full object-cover" loading="eager" fetchpriority="high" onerror="this.remove()" />
-    <div class="absolute inset-0 bg-gradient-to-t from-mar-fundo via-mar-fundo/50 to-transparent"></div>
-    <!-- o sol nasce no horizonte -->
-    <div class="sol-heroi absolute left-[72%] top-[6%] h-24 w-24 rounded-full bg-sol opacity-90 blur-[1px] md:left-[78%] md:top-[12%] md:h-40 md:w-40" style="box-shadow: 0 0 80px 30px rgb(245 165 36 / 0.35)"></div>
-    <div class="absolute inset-x-0 top-[calc(6%+6rem)] h-px bg-espuma/30 md:top-[calc(12%+10rem)]"></div>
+    {hasPhoto && <img src="/images/hero.jpg" alt="Fachada da Pousada Orla do Sol, em Prado" class="h-full w-full object-cover object-[60%_40%]" loading="eager" fetchpriority="high" />}
+    <div class:list={['absolute inset-0 bg-gradient-to-t from-mar-fundo to-transparent', hasPhoto ? 'via-mar-fundo/70' : 'via-mar-fundo/50']}></div>
+    {!hasPhoto && (
+      <>
+        <!-- sem foto ainda: o sol nasce no horizonte -->
+        <div class="sol-heroi absolute left-[72%] top-[6%] h-24 w-24 rounded-full bg-sol opacity-90 blur-[1px] md:left-[78%] md:top-[12%] md:h-40 md:w-40" style="box-shadow: 0 0 80px 30px rgb(245 165 36 / 0.35)"></div>
+        <div class="absolute inset-x-0 top-[calc(6%+6rem)] h-px bg-espuma/30 md:top-[calc(12%+10rem)]"></div>
+      </>
+    )}
   </div>
 
   <div class="container-site relative pb-10 pt-28 md:pb-16 md:pt-44">
