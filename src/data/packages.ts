@@ -70,7 +70,7 @@ export const packages: Package[] = [
       { day: 'Sábado', title: 'Praia, barco e jantar', text: 'Café no quarto com frutas da região. Dia de praia. Passeio de barco no fim de tarde e jantar na beira-mar.' },
       { day: 'Domingo', title: 'Sem pressa', text: 'Café até as 10h, piscina, e saída até as 14h.' },
     ],
-    photo: { src: '/images/pacotes/fim-de-semana-a-dois.jpg', alt: 'Casal na varanda ao pôr do sol' },
+    photo: { src: '/images/pacotes/fim-de-semana-a-dois.jpg', alt: 'Quarto com varanda e rede' },
     seasonLabel: 'O ano todo, exceto feriados',
   },
   {
@@ -106,7 +106,7 @@ export const packages: Package[] = [
       { day: 'Dia 5', title: 'Centro histórico', text: 'Transfer para o centro, casario colonial e almoço na beira do rio.' },
       { day: 'Dias 6 e 7', title: 'Livres', text: 'Praia, piscina e o segundo almoço na beira-mar no dia que preferirem.' },
     ],
-    photo: { src: '/images/pacotes/semana-em-familia.jpg', alt: 'Família na praia' },
+    photo: { src: '/images/pacotes/semana-em-familia.jpg', alt: 'Piscina da pousada com o mural das baleias' },
     seasonLabel: 'Férias de janeiro e julho, e baixa temporada',
   },
   {
@@ -123,7 +123,7 @@ export const packages: Package[] = [
       { day: 'Dia 3', title: 'Falésias', text: 'Transfer para as falésias ao sul e almoço na praia.' },
       { day: 'Dia 4', title: 'Opcional', text: 'Dia livre de praia para quem escolheu quatro noites.' },
     ],
-    photo: { src: '/images/pacotes/temporada-das-baleias.jpg', alt: 'Cauda de baleia-jubarte no mar' },
+    photo: { src: '/images/pacotes/temporada-das-baleias.jpg', alt: 'Baleia-jubarte saltando no mar de Prado' },
     seasonLabel: 'Julho a novembro, pico em agosto e setembro',
   },
   {
@@ -138,7 +138,7 @@ export const packages: Package[] = [
       { day: 'Noite 1', title: 'Festival', text: 'Transfer às 19h para o centro e jantar no restaurante parceiro.' },
       { day: 'Dia 2', title: 'Praia e festival', text: 'Dia de praia e a programação da noite por conta própria, com o transfer.' },
     ],
-    photo: { src: '/images/pacotes/festival-gastronomico.jpg', alt: 'Moqueca servida em panela de barro' },
+    photo: { src: '/images/pacotes/festival-gastronomico.jpg', alt: 'Rua de restaurantes no centro histórico de Prado ao anoitecer' },
     seasonLabel: '8 de outubro a 2 de novembro',
   },
   {
@@ -176,7 +176,7 @@ export const packages: Package[] = [
       { day: 'Todas as noites', title: 'Blocos', text: 'Transfer às 19h para o centro e volta combinada de madrugada.' },
       { day: 'Todos os dias', title: 'Recuperação', text: 'Café até as 11h, piscina e praia em frente.' },
     ],
-    photo: { src: '/images/pacotes/carnaval.jpg', alt: 'Bloco de carnaval de rua' },
+    photo: { src: '/images/pacotes/carnaval.jpg', alt: 'Rua do centro histórico de Prado' },
     seasonLabel: 'Pacotes de 4 e 5 noites · datas a confirmar',
   },
   {

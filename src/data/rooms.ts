@@ -46,7 +46,7 @@ export const rooms: Room[] = [
     beds: '1 cama de casal + até 2 camas extras',
     amenities: ['Varanda privativa', ...common],
     photos: [
-      { src: '/images/rooms/varanda-1.jpg', alt: 'Apartamento com varanda, cama de casal' },
+      { src: '/images/rooms/varanda-1.jpg', alt: 'Apartamento com cama de casal, forro de madeira e varanda com rede' },
       { src: '/images/rooms/varanda-2.jpg', alt: 'Varanda do apartamento' },
     ],
     ideal: 'Casais e famílias que querem varanda',
@@ -63,7 +63,7 @@ export const rooms: Room[] = [
     beds: '1 cama de casal + até 2 camas extras',
     amenities: common,
     photos: [
-      { src: '/images/rooms/normal-1.jpg', alt: 'Apartamento padrão, cama de casal' },
+      { src: '/images/rooms/normal-1.jpg', alt: 'Apartamento com cama de casal e cama de solteiro, ar-condicionado e TV' },
     ],
     ideal: 'Quem quer o melhor preço',
   },
