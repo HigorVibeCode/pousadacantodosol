@@ -2,7 +2,7 @@
 # Gera a prévia estática (modo demonstração) em $1 a partir do repositório
 set -e
 OUT=$1; cd "$(dirname "$0")/.."
-PUBLIC_DEMO=1 PUBLIC_SITE_URL=https://pousada-orla-do-sol.vercel.app npx astro build 2>&1 | grep -E "ERROR|Complete!"
+PUBLIC_DEMO=1 PUBLIC_SITE_URL=https://pousadacantodosol.vercel.app npx astro build 2>&1 | grep -E "ERROR|Complete!"
 rm -rf "$OUT" && cp -r .vercel/output/static "$OUT" && cd "$OUT"
 rm -rf sitemap-*.xml robots.txt images/README.md a-pousada acomodacoes-em-prado-ba fotos o-que-fazer-em-prado-ba quartos
 mv _astro assets

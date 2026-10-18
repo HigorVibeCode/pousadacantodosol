@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
 
-const site = process.env.PUBLIC_SITE_URL || 'https://pousada-orla-do-sol.vercel.app';
+const site = process.env.PUBLIC_SITE_URL || 'https://pousadacantodosol.vercel.app';
 
 export default defineConfig({
   site,

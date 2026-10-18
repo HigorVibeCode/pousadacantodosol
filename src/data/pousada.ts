@@ -63,7 +63,7 @@ export const pousada = {
   ],
 } as const;
 
-export const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://pousada-orla-do-sol.vercel.app';
+export const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://pousadacantodosol.vercel.app';
 export const gtmId: string = import.meta.env.PUBLIC_GTM_ID || '';
 export type BookingMode = 'interno' | 'whatsapp' | 'engine';
 const m = import.meta.env.PUBLIC_BOOKING_MODE;

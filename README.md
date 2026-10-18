@@ -18,7 +18,7 @@ npm run preview   # serve dist/
 1. Importar este repositório na Vercel (botão acima). O framework é detectado como Astro.
 2. **Banco de dados:** no projeto, aba *Storage → Create Database → Neon (Postgres)*, plano gratuito. A Vercel injeta `DATABASE_URL` sozinha. Sem isso o motor roda em memória e as reservas somem a cada reinício.
 3. Em *Environment Variables*, copiar as chaves de `.env.example`:
-   - `PUBLIC_SITE_URL`: a URL provisória da Vercel (ex.: `https://pousada-orla-do-sol.vercel.app`).
+   - `PUBLIC_SITE_URL`: a URL provisória da Vercel (ex.: `https://pousadacantodosol.vercel.app`).
    - `ADMIN_PASSWORD`: senha do painel em `/admin`.
    - `PUBLIC_GTM_ID`: ID do Google Tag Manager. Vazio = nada é carregado.
    - `PUBLIC_BOOKING_MODE`: `interno` (motor próprio, padrão), `whatsapp` ou `engine` (fornecedor externo).
