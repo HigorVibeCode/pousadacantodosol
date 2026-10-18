@@ -157,7 +157,7 @@ export const packages: Package[] = [
       { day: '31/12', title: 'Virada', text: 'Transfer para a orla às 21h, espumante, fogos, e volta de madrugada.' },
       { day: '01/01', title: 'Café tardio', text: 'Café servido até o meio-dia e praia à tarde.' },
     ],
-    photo: { src: '/images/pacotes/reveillon.jpg', alt: 'Fogos sobre o mar' },
+    photo: { src: '/images/pacotes/reveillon.jpg', alt: 'Multidão de branco na virada do ano em frente à igreja de Prado' },
     seasonLabel: 'Pacotes de 4 e 5 noites',
   },
   {
@@ -176,7 +176,7 @@ export const packages: Package[] = [
       { day: 'Todas as noites', title: 'Blocos', text: 'Transfer às 19h para o centro e volta combinada de madrugada.' },
       { day: 'Todos os dias', title: 'Recuperação', text: 'Café até as 11h, piscina e praia em frente.' },
     ],
-    photo: { src: '/images/pacotes/carnaval.jpg', alt: 'Rua do centro histórico de Prado' },
+    photo: { src: '/images/pacotes/carnaval.jpg', alt: 'Bloco de carnaval na praça da igreja de Prado' },
     seasonLabel: 'Pacotes de 4 e 5 noites · datas a confirmar',
   },
   {
@@ -190,7 +190,7 @@ export const packages: Package[] = [
     rooms: ['com-varanda', 'normal'], lodgingDiscount: 0.05, perPerson: 40, perChild6: 0, perReservation: 0, capacity: 18,
     includes: [...BASE, 'Vaga coberta e lavagem da moto', 'Café da manhã a partir das 6h30', 'Transfer para o evento às 19h e volta'],
     itinerary: [{ day: 'Evento', title: 'Moto Rock', text: 'Transfer para a arena à noite. Moto fica lavada e coberta na pousada.' }],
-    photo: { src: '/images/pacotes/prado-moto-rock.jpg', alt: 'Motos estacionadas ao pôr do sol' },
+    photo: { src: '/images/pacotes/prado-moto-rock.jpg', alt: 'Motos em frente à igreja de Prado no Moto Rock' },
     seasonLabel: 'Maio · data a confirmar',
   },
   {
@@ -212,7 +212,7 @@ export const packages: Package[] = [
     rooms: ['com-varanda', 'normal'], lodgingDiscount: 0.10, perPerson: 170, perChild6: 60, perReservation: 0, capacity: 8,
     includes: [...BASE, 'Um almoço na beira da praia', 'Passeio de barco pelo rio e manguezal'],
     itinerary: [{ day: 'Feriado', title: 'Praia e barco', text: 'Almoço na barraca parceira e passeio de barco no dia que preferir.' }],
-    photo: { src: '/images/pacotes/feriado-prolongado.jpg', alt: 'Barco no rio Jucuruçu' },
+    photo: { src: '/images/pacotes/feriado-prolongado.jpg', alt: 'Festa na praça da igreja de Prado' },
     seasonLabel: 'Feriados de 2027',
   },
 ];
