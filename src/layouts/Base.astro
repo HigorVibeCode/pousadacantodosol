@@ -65,7 +65,9 @@ const fullTitle = title.includes(pousada.name) ? title : `${title} · ${pousada.
     <Consent />
     <script>
       import { initContactTracking } from '../lib/booking';
+      import { initMotion } from '../lib/motion';
       initContactTracking();
+      initMotion();
     </script>
   </body>
 </html>

@@ -121,3 +121,53 @@ body.picker-open::after { content: ""; position: fixed; inset: 0; z-index: 55; b
   .picker-sheet { position: absolute; left: 0; right: auto; bottom: auto; top: calc(100% + .5rem); width: 26rem; max-height: none; border-radius: var(--radius-ficha); animation: none; }
   body.picker-open::after { display: none; }
 }
+
+/* ---------- Movimento (só com JS e sem "reduzir movimento") ---------- */
+.js-motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+.js-motion [data-reveal].in { opacity: 1; transform: none; }
+
+/* Divisor: a linha fica embaixo e o sol nasce quando entra na tela */
+.horizonte { height: 16px; overflow: hidden; background: none; }
+.horizonte::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(14 59 67 / 0.25) 20%, rgb(14 59 67 / 0.25) 80%, transparent);
+}
+.js-motion .horizonte::after { transform: translate(-50%, 110%); transition: transform 1s cubic-bezier(.2,.7,.2,1) .15s; }
+.js-motion .horizonte.in::after { transform: translate(-50%, 0); }
+.js-motion .horizonte[data-reveal] { opacity: 1; transform: none; }
+
+/* Herói: entrada escalonada do texto e do formulário */
+@keyframes entrar { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.js-motion [data-enter] { animation: entrar .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i, 0) * 110ms + 80ms); }
+[data-parallax] { will-change: transform; }
+
+/* Ondas na base do herói */
+.ondas { position: absolute; left: 0; right: 0; bottom: -1px; height: 56px; overflow: hidden; pointer-events: none; }
+.ondas svg { position: absolute; bottom: 0; left: 0; width: 200%; height: 100%; }
+.js-motion .ondas .onda-1 { animation: ondular 14s linear infinite; }
+.js-motion .ondas .onda-2 { animation: ondular 22s linear infinite reverse; }
+@keyframes ondular { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* Cabeçalho compacto ao rolar; o sol do logo sobe com o progresso */
+[data-header] { transition: box-shadow .3s ease, background-color .3s ease; }
+[data-header].is-scrolled { box-shadow: 0 8px 30px -18px rgb(14 59 67 / .35); background-color: rgb(244 248 246 / .96); }
+.logo-sol { transition: transform .2s linear; transform: translate(-50%, calc(var(--p, 0) * -5px)); }
+
+/* Fotos surgem suavemente */
+.js-motion .foto-fade { opacity: 0; transition: opacity .6s ease; }
+.js-motion .foto-fade.loaded { opacity: 1; }
+
+/* Micro-interações */
+.btn { transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, border-color .18s ease; }
+.btn:hover { transform: translateY(-1px); }
+.btn-sol:hover { box-shadow: 0 14px 28px -10px rgb(245 165 36 / 0.8); }
+article.group { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+article.group:hover { transform: translateY(-3px); }
+[data-grid] button:not(:disabled):active, .campo-data:active { transform: scale(.96); }
+.campo { transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease; }
+.campo:focus { box-shadow: 0 0 0 4px rgb(31 122 134 / .12); }

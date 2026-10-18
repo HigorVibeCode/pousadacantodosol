@@ -10,11 +10,11 @@ const nav = [
 ];
 const path = Astro.url.pathname;
 ---
-<header class="sticky top-0 z-40 border-b border-mar/10 bg-espuma/90 backdrop-blur">
+<header class="sticky top-0 z-40 border-b border-mar/10 bg-espuma/90 backdrop-blur" data-header>
   <div class="container-site flex h-16 items-center justify-between gap-4">
     <a href="/" class="flex items-center gap-2.5" aria-label={`${pousada.name}, página inicial`}>
       <span class="relative block h-7 w-7 overflow-hidden rounded-full bg-mar" aria-hidden="true">
-        <span class="absolute left-1/2 top-[55%] h-4 w-4 -translate-x-1/2 rounded-full bg-sol"></span>
+        <span class="logo-sol absolute left-1/2 top-[55%] h-4 w-4 rounded-full bg-sol"></span>
         <span class="absolute inset-x-0 top-[55%] h-px bg-espuma/70"></span>
       </span>
       <span class="display text-lg font-bold leading-none">Orla do Sol</span>

@@ -5,9 +5,10 @@ import BookingBar from './BookingBar.astro';
 // Com foto real no lugar, o sol decorativo sai de cena e o gradiente só garante a leitura do texto.
 const hasPhoto = fs.existsSync('public/images/hero.jpg');
 ---
-<section class="relative overflow-x-clip bg-mar text-espuma">
+<section class="relative overflow-x-clip bg-mar text-espuma" data-hero>
   <!-- Foto do herói: trocar o placeholder por /images/hero.jpg (piscina com a praia ao fundo, 1920x1080) -->
-  <div class="absolute inset-0 foto-placeholder" aria-hidden="true">
+  <div class="absolute inset-0 overflow-hidden" aria-hidden="true">
+  <div class="absolute inset-x-0 -top-[35%] -bottom-[10%] foto-placeholder" data-parallax="0.3">
     {hasPhoto && <img src="/images/hero.jpg" alt="Fachada da Pousada Orla do Sol, em Prado" class="h-full w-full object-cover object-[60%_40%]" loading="eager" fetchpriority="high" />}
     <div class:list={['absolute inset-0 bg-gradient-to-t from-mar-fundo to-transparent', hasPhoto ? 'via-mar-fundo/70' : 'via-mar-fundo/50']}></div>
     {!hasPhoto && (
@@ -18,16 +19,17 @@ const hasPhoto = fs.existsSync('public/images/hero.jpg');
       </>
     )}
   </div>
+  </div>
 
-  <div class="container-site relative pb-10 pt-28 md:pb-16 md:pt-44">
-    <p class="eyebrow !text-sol">Novo Prado · Prado · Bahia</p>
-    <h1 class="mt-3 max-w-3xl text-[2.6rem] font-extrabold sm:text-6xl md:text-7xl">
+  <div class="container-site relative pb-16 pt-28 md:pb-24 md:pt-44">
+    <p class="eyebrow !text-sol" data-enter style="--i:0">Novo Prado · Prado · Bahia</p>
+    <h1 class="mt-3 max-w-3xl text-[2.6rem] font-extrabold sm:text-6xl md:text-7xl" data-enter style="--i:1">
       A praia fica a dois minutos.<br class="hidden sm:block" /> A piscina, a dez passos.
     </h1>
-    <p class="mt-5 max-w-xl text-lg text-espuma/85">
+    <p class="mt-5 max-w-xl text-lg text-espuma/85" data-enter style="--i:2">
       Pousada familiar com {pousada.roomsTotal} apartamentos com ar-condicionado, café da manhã incluso e estacionamento dentro do terreno. Chegue de carro, deixe a chave e vá para a Praia Novo Prado a pé.
     </p>
-    <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+    <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm" data-enter style="--i:3">
       <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 font-semibold backdrop-blur">
         <svg class="h-4 w-4 text-sol" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L10 14.9l-5.3 2.8 1.1-5.9L1.5 7.7l5.9-.8z"/></svg>
         {pousada.rating.value.toString().replace('.', ',')} no {pousada.rating.source}
@@ -35,8 +37,13 @@ const hasPhoto = fs.existsSync('public/images/hero.jpg');
       <span class="text-espuma/75">{pousada.rating.count} avaliações</span>
       <span class="text-espuma/75">Check-in {pousada.checkIn} · Check-out {pousada.checkOut}</span>
     </div>
-    <div class="mt-8 md:mt-10">
+    <div class="mt-8 md:mt-10" data-enter style="--i:4">
       <BookingBar />
     </div>
+  </div>
+  <!-- ondas na base: duas camadas em velocidades diferentes -->
+  <div class="ondas" aria-hidden="true">
+    <svg class="onda-2" viewBox="0 0 2880 56" preserveAspectRatio="none"><path fill="#f4f8f6" fill-opacity="0.35" d="M0 30 C240 10 480 50 720 30 S1200 10 1440 30 S1920 50 2160 30 S2640 10 2880 30 V56 H0 Z"/></svg>
+    <svg class="onda-1" viewBox="0 0 2880 56" preserveAspectRatio="none"><path fill="#f4f8f6" d="M0 38 C240 22 480 54 720 38 S1200 22 1440 38 S1920 54 2160 38 S2640 22 2880 38 V56 H0 Z"/></svg>
   </div>
 </section>
