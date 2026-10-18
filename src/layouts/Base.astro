@@ -19,11 +19,14 @@ interface Props {
   noindex?: boolean;
 }
 const { title, description = pousada.description, image = '/images/og.jpg', schema = [], noSticky = false, noindex = false } = Astro.props;
+const demo = import.meta.env.PUBLIC_DEMO === '1';
+const depth = Astro.url.pathname.split('/').filter(Boolean).length;
+const rootRel = depth ? '../'.repeat(depth) : './';
 const canonical = new URL(Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/') || '/', siteUrl).href;
 const fullTitle = title.includes(pousada.name) ? title : `${title} · ${pousada.name}`;
 ---
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-root={rootRel} data-demo={demo ? '1' : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -51,6 +54,7 @@ const fullTitle = title.includes(pousada.name) ? title : `${title} · ${pousada.
     <Schema extra={schema} />
   </head>
   <body class="min-h-dvh flex flex-col">
+    {demo && <div class="bg-sol px-4 py-1.5 text-center text-xs font-semibold text-mar-fundo">Demonstração · reservas e painel funcionam, mas os dados ficam só neste navegador · <a href={`${rootRel}admin/index.html`} class="underline">abrir painel do dono</a></div>}
     <a href="#conteudo" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-sol focus:px-4 focus:py-2 focus:rounded-full">Pular para o conteúdo</a>
     <Header />
     <main id="conteudo" class="flex-1">

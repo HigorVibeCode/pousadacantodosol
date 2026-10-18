@@ -1,25 +1,34 @@
 ---
 import { pousada, bookingMode, bookingEngineUrl } from '../data/pousada';
-import { rooms } from '../data/rooms';
 interface Props {
   /** nome da categoria pré-selecionada (página de quarto) */
   room?: string;
   roomSlug?: string;
   compact?: boolean;
   id?: string;
+  /** desenha o calendário embutido abaixo dos campos (página do apartamento) */
+  inlineCalendar?: boolean;
 }
-const { room = '', roomSlug = '', compact = false, id = 'reservar' } = Astro.props;
+const { room = '', roomSlug = '', compact = false, id = 'reservar', inlineCalendar = false } = Astro.props;
 const cfg = { whatsapp: pousada.whatsapp, mode: bookingMode, engineUrl: bookingEngineUrl };
 ---
-<form id={id} class:list={['ficha p-4 sm:p-5 scroll-mt-24', compact ? '' : 'md:p-6']} data-booking data-cfg={JSON.stringify(cfg)} novalidate>
+<form id={id} class:list={['ficha relative p-4 sm:p-5 scroll-mt-24', compact ? '' : 'md:p-6']} data-booking data-cfg={JSON.stringify(cfg)} data-room-slug={roomSlug} data-inline={inlineCalendar ? '1' : ''} novalidate>
+  <input type="hidden" name="checkin" />
+  <input type="hidden" name="checkout" />
   <div class:list={['grid gap-3', compact ? 'grid-cols-2' : 'grid-cols-2 lg:grid-cols-[1.1fr_1.1fr_0.7fr_0.8fr_0.8fr_auto] lg:items-end']}>
-    <div class:list={!compact && 'col-span-1'}>
-      <label class="rotulo" for={`${id}-ci`}>Chegada</label>
-      <input class="campo" type="date" id={`${id}-ci`} name="checkin" required autocomplete="off" />
+    <div>
+      <span class="rotulo">Chegada</span>
+      <button type="button" class="campo campo-data" data-trigger="checkin" aria-haspopup="dialog">
+        <svg class="h-4 w-4 shrink-0 text-mar-claro" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 8h14M7 2v4M13 2v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span data-val>Escolher</span>
+      </button>
     </div>
     <div>
-      <label class="rotulo" for={`${id}-co`}>Saída</label>
-      <input class="campo" type="date" id={`${id}-co`} name="checkout" required autocomplete="off" />
+      <span class="rotulo">Saída</span>
+      <button type="button" class="campo campo-data" data-trigger="checkout" aria-haspopup="dialog">
+        <svg class="h-4 w-4 shrink-0 text-mar-claro" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 8h14M7 2v4M13 2v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span data-val>Escolher</span>
+      </button>
     </div>
     <div class:list={compact && 'col-span-2'}>
       <label class="rotulo" for={`${id}-ad`}>Adultos</label>
@@ -39,9 +48,7 @@ const cfg = { whatsapp: pousada.whatsapp, mode: bookingMode, engineUrl: bookingE
         {[0,1,2].map((n) => <option value={n}>{n}</option>)}
       </select>
     </div>
-    {room ? <input type="hidden" name="room" value={room} data-slug={roomSlug} /> : (
-      !compact && <input type="hidden" name="room" value="" />
-    )}
+    {room && <input type="hidden" name="room" value={room} data-slug={roomSlug} />}
     <button type="submit" class:list={['btn-sol w-full col-span-2', compact ? '' : 'lg:col-span-1 lg:w-auto']}>
       Ver disponibilidade
       <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12m0 0-5-5m5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -52,6 +59,7 @@ const cfg = { whatsapp: pousada.whatsapp, mode: bookingMode, engineUrl: bookingE
     <span>{bookingMode === 'interno' ? 'Preço e vaga na hora, sem taxa de reserva.' : 'Resposta pelo WhatsApp em poucos minutos, das 7h às 22h.'}</span>
     <span class="text-falesia font-medium" data-erro hidden></span>
   </p>
+  {inlineCalendar && <div class="mt-4" data-inline-mount></div>}
 </form>
 <script>
   import { initBooking } from '../lib/booking';

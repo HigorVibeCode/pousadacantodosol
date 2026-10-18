@@ -1,14 +1,12 @@
 import type { APIRoute } from 'astro';
 import { addBlock, removeBlock } from '../../../lib/engine';
+import { json, readBody } from '../_json';
 export const prerender = false;
-export const POST: APIRoute = async ({ request, redirect }) => {
-  const f = await request.formData();
-  const get = (k: string) => String(f.get(k) ?? '').trim();
+export const POST: APIRoute = async ({ request }) => {
+  const b = await readBody(request);
   try {
-    if (get('acao') === 'remover') await removeBlock(parseInt(get('id')));
-    else await addBlock({ room: get('room'), start: get('start'), end: get('end'), qty: parseInt(get('qty')) || 1, reason: get('reason') });
-    return redirect('/admin#bloqueios', 303);
-  } catch (e: any) {
-    return redirect('/admin?erro=' + encodeURIComponent(e?.message || 'Erro') + '#bloqueios', 303);
-  }
+    if (b.acao === 'remover') await removeBlock(parseInt(b.id));
+    else await addBlock({ room: b.room, start: b.start, end: b.end, qty: parseInt(b.qty) || 1, reason: b.reason });
+    return json({ ok: true });
+  } catch (e: any) { return json({ error: e?.message || 'Erro' }, 400); }
 };

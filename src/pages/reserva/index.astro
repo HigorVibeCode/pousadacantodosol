@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import { pousada } from '../../data/pousada';
+---
+<Base title="Sua reserva" description="Resumo do seu pedido de reserva na Pousada Orla do Sol." noSticky noindex>
+  <section class="container-site max-w-2xl pt-10 md:pt-16" id="app" data-wa={pousada.whatsapp} data-phone={pousada.phoneDisplay} data-checkin={pousada.checkIn} data-checkout={pousada.checkOut}>
+    <p class="text-sm text-neblina">Carregando…</p>
+  </section>
+  <script>
+    import { mountReserva } from '../../lib/ui-reserva';
+    mountReserva(document.getElementById('app')!);
+  </script>
+</Base>

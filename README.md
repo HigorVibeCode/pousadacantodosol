@@ -26,11 +26,13 @@ npm run preview   # serve dist/
 
 | Rota | O que faz |
 |---|---|
-| `/reservar` | Datas e hóspedes → preço e vaga por apartamento → dados do hóspede → pedido criado (status *pendente*) |
-| `/reserva/ODS-XXXXX` | Resumo do pedido, código e botão para mandar o código no WhatsApp |
-| `/acomodacoes/<tipo>` | Calendário mensal com preço e vaga por dia |
+| `/reservar` | Calendário com preço e vaga por dia → preço total por apartamento → dados do hóspede → pedido criado (status *pendente*) |
+| `/reserva?code=ODS-XXXXX` | Resumo do pedido, código e botão para mandar o código no WhatsApp |
+| `/acomodacoes/<tipo>` | Calendário do apartamento embutido na página |
 | `/admin` | Painel do dono: pedidos a confirmar, grade de vagas 30 dias, confirmar/cancelar, bloquear datas |
-| `/api/disponibilidade`, `/api/calendario` | JSON usado pelas páginas |
+| `/api/*` | JSON usado pelas telas (disponibilidade, calendário, reservas, reserva, admin/*) |
+
+As telas de reserva e o painel são páginas estáticas que desenham o conteúdo no navegador a partir das APIs. Isso permite a **prévia estática** (artefato): com `PUBLIC_DEMO=1` na build, as mesmas telas respondem as APIs localmente e guardam as reservas no navegador (`src/lib/demo-api.ts`). Nunca ligar `PUBLIC_DEMO` na Vercel.
 
 **Regras de preço** (`src/data/pricing.ts`, conforme tabela do proprietário): o apartamento cobre 1 ou 2 pessoas; criança até 6 anos é cama extra de R$ 50/noite, pessoa acima de 6 anos R$ 130/noite; Ano Novo e Carnaval são pacotes de 4 ou 5 noites com diária própria; pernoite de 1 noite e fim de semana em temporada têm + R$ 20; sem taxa de serviço. As tarifas de baixa e alta fora dos feriados são **valores de demonstração** até o dono confirmar.
 
@@ -64,6 +66,13 @@ Os redirecionamentos 301 das URLs dos sites antigos estão em `vercel.json` (pro
 - [ ] Política de cancelamento, crianças e pets em `src/data/faq.ts`
 - [ ] `PUBLIC_GTM_ID` configurado com GA4 e conversão do Google Ads no evento `reserva_clique`
 - [ ] Enviar sitemap no Search Console
+
+## Prévia estática (artefato)
+
+```bash
+PUBLIC_DEMO=1 npx astro build        # gera .vercel/output/static com o modo demonstração
+```
+Depois, converter os links absolutos em relativos e renomear `_astro` para `assets` (ver `scripts/make-preview.sh`).
 
 ## Eventos de medição (dataLayer)
 

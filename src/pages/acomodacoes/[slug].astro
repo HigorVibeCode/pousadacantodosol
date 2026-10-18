@@ -2,7 +2,6 @@
 import Base from '../../layouts/Base.astro';
 import BookingBar from '../../components/BookingBar.astro';
 import RoomCard from '../../components/RoomCard.astro';
-import PriceCalendar from '../../components/PriceCalendar.astro';
 import { rooms, priceFrom } from '../../data/rooms';
 import { pousada, siteUrl } from '../../data/pousada';
 import { brl } from '../../lib/format';
@@ -45,9 +44,6 @@ const schema = [{
         <div class="rounded-xl bg-white p-4"><dt class="text-neblina">Camas</dt><dd class="font-semibold">{room.beds}</dd></div>
         <div class="rounded-xl bg-white p-4"><dt class="text-neblina">Check-in / out</dt><dd class="font-semibold">{pousada.checkIn} / {pousada.checkOut}</dd></div>
       </dl>
-      <h2 class="mt-8 text-xl font-bold">Preço e vaga por dia</h2>
-      <p class="mt-1 text-sm text-neblina">Toque em um dia para escolher a chegada e depois a saída.</p>
-      <div class="mt-3"><PriceCalendar roomSlug={room.slug} formId="reservar" /></div>
       <h2 class="mt-8 text-xl font-bold">No apartamento</h2>
       <ul class="mt-3 grid gap-2 text-sm sm:grid-cols-2">
         {room.amenities.map((a) => <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-sol"></span>{a}</li>)}
@@ -62,7 +58,7 @@ const schema = [{
         <p class="text-sm text-neblina">Diária com café da manhã</p>
         <p class="text-2xl font-extrabold">{priceFrom(room) ? <>{brl(priceFrom(room)!)}<span class="text-sm font-normal text-neblina"> / noite para 2, a partir de</span></> : <span class="text-base text-mar-claro">Consultar tarifa</span>}</p>
       </div>
-      <BookingBar room={room.name} roomSlug={room.slug} compact id="reservar" />
+      <BookingBar room={room.name} roomSlug={room.slug} compact id="reservar" inlineCalendar />
       <p class="mt-3 text-xs text-neblina">Política de cancelamento e valor para crianças são enviados junto com a cotação.</p>
     </aside>
   </section>

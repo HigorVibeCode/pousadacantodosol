@@ -11,6 +11,7 @@ export default defineConfig({
   // Páginas são estáticas por padrão; rotas do motor (/reservar, /reserva, /admin, /api)
   // declaram `prerender = false` e rodam no servidor da Vercel.
   output: 'static',
+  devToolbar: { enabled: false },
   adapter: vercel(),
   integrations: [sitemap({ filter: (p) => !/\/(admin|reserva|reservar|api)(\/|$)/.test(p) })],
   vite: {

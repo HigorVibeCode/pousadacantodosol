@@ -101,3 +101,23 @@
 details > summary { list-style: none; cursor: pointer; }
 details > summary::-webkit-details-marker { display: none; }
 details[open] .chevron { transform: rotate(180deg); }
+
+/* Campo de data: botão com a cara dos outros campos */
+.campo-data { @apply flex items-center gap-2 text-left; }
+.campo-data[data-trigger] [data-val] { @apply text-neblina; }
+.campo-data.has-value [data-val] { @apply text-mar font-semibold; }
+
+/* Calendário: folha no rodapé no celular, popover no desktop */
+.picker-sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+  max-height: 88vh; overflow-y: auto;
+  border-radius: 1.25rem 1.25rem 0 0;
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  animation: subir .25s ease-out;
+}
+@keyframes subir { from { transform: translateY(30px); opacity: 0 } to { transform: none; opacity: 1 } }
+body.picker-open::after { content: ""; position: fixed; inset: 0; z-index: 55; background: rgb(8 42 48 / .45); }
+@media (min-width: 768px) {
+  .picker-sheet { position: absolute; left: 0; right: auto; bottom: auto; top: calc(100% + .5rem); width: 26rem; max-height: none; border-radius: var(--radius-ficha); animation: none; }
+  body.picker-open::after { display: none; }
+}
