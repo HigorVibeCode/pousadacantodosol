@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import PackageCard from '../../components/PackageCard.astro';
 import Horizonte from '../../components/Horizonte.astro';
+import Luzes from '../../components/Luzes.astro';
 import { packages } from '../../data/packages';
 import { groupLabel } from '../../lib/packages-ui';
 import { pousada } from '../../data/pousada';
@@ -23,7 +24,8 @@ const schema = [{
   {groups.map((g, i) => (
     <>
       {i > 0 && <Horizonte />}
-      <section class="container-site scroll-mt-24" id={g.key}>
+      <section class:list={['container-site scroll-mt-24', g.key === 'eventos' && 'relative pt-10']} id={g.key}>
+        {g.key === 'eventos' && <Luzes class="absolute inset-x-0 top-0 h-10 text-mar" />}
         <h2 class="text-2xl font-extrabold md:text-3xl">{g.label}</h2>
         <ul class={`mt-6 grid gap-4 sm:grid-cols-2 ${g.items.length > 2 ? 'lg:grid-cols-3' : 'lg:max-w-4xl'}`}>
           {g.items.map((p) => <li><PackageCard pkg={p} /></li>)}

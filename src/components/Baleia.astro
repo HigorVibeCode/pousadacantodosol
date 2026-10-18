@@ -1,0 +1,10 @@
+---
+/** Silhueta pequena de jubarte. Usada como toque discreto nas ondas do herói e do rodapé. */
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+---
+<svg class:list={['baleia-mini', cls]} viewBox="0 0 400 200" aria-hidden="true">
+  <g class="spray" fill="currentColor"><circle cx="70" cy="60" r="5"/><circle cx="92" cy="40" r="4"/><circle cx="56" cy="44" r="3"/></g>
+  <path fill="currentColor" d="M22 112 C58 46 214 34 298 72 C326 84 346 80 374 60 L366 92 L386 118 C348 108 330 112 300 122 C232 152 92 154 22 112 Z"/>
+  <path fill="currentColor" d="M146 126 C170 152 206 162 236 150 C214 140 192 126 162 118 Z"/>
+</svg>

@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import { pousada } from '../data/pousada';
 import BookingBar from './BookingBar.astro';
+import Baleia from './Baleia.astro';
 // Com foto real no lugar, o sol decorativo sai de cena e o gradiente só garante a leitura do texto.
 const hasPhoto = fs.existsSync('public/images/hero.jpg');
 ---
@@ -41,6 +42,8 @@ const hasPhoto = fs.existsSync('public/images/hero.jpg');
       <BookingBar />
     </div>
   </div>
+  <!-- uma jubarte passa devagar sobre as ondas -->
+  <div class="nado text-espuma" aria-hidden="true"><Baleia /></div>
   <!-- ondas na base: duas camadas em velocidades diferentes -->
   <div class="ondas" aria-hidden="true">
     <svg class="onda-2" viewBox="0 0 2880 56" preserveAspectRatio="none"><path fill="#f4f8f6" fill-opacity="0.35" d="M0 30 C240 10 480 50 720 30 S1200 10 1440 30 S1920 50 2160 30 S2640 10 2880 30 V56 H0 Z"/></svg>

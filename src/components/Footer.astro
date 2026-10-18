@@ -1,9 +1,14 @@
 ---
 import { pousada } from '../data/pousada';
 import { fullAddress, waDefault } from '../lib/format';
+import Baleia from './Baleia.astro';
 const year = new Date().getFullYear();
 ---
 <footer class="mt-20 bg-mar text-espuma">
+  <div class="relative h-12 overflow-hidden bg-espuma" aria-hidden="true">
+    <div class="nado nado-rodape text-mar"><Baleia /></div>
+    <svg class="absolute bottom-0 left-0 h-7 w-[200%] onda-rodape" viewBox="0 0 2880 56" preserveAspectRatio="none"><path fill="#0e3b43" d="M0 38 C240 22 480 54 720 38 S1200 22 1440 38 S1920 54 2160 38 S2640 22 2880 38 V56 H0 Z"/></svg>
+  </div>
   <div class="container-site grid gap-10 py-14 md:grid-cols-3">
     <div>
       <p class="display text-2xl font-bold">Pousada Orla do Sol</p>

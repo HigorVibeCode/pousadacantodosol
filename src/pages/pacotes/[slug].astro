@@ -1,4 +1,5 @@
 ---
+import Luzes from '../../components/Luzes.astro';
 import Base from '../../layouts/Base.astro';
 import BookingBar from '../../components/BookingBar.astro';
 import PackageCard from '../../components/PackageCard.astro';
@@ -25,7 +26,8 @@ const schema = [{
   <nav class="container-site pt-6 text-sm text-neblina" aria-label="Você está em">
     <a href="/" class="hover:underline">Início</a> › <a href="/pacotes" class="hover:underline">Pacotes</a> › <span class="text-mar">{pkg.name}</span>
   </nav>
-  <section class="container-site mt-6 grid gap-8 lg:grid-cols-[1.3fr_1fr]">
+  <section class:list={['container-site mt-6 grid gap-8 lg:grid-cols-[1.3fr_1fr]', pkg.group === 'eventos' && 'relative pt-8']}>
+    {pkg.group === 'eventos' && <Luzes class="absolute inset-x-0 top-0 h-8 text-mar" />}
     <div>
       <figure class="foto-placeholder overflow-hidden rounded-[var(--radius-ficha)] aspect-[16/9]">
         <img src={pkg.photo.src} alt={pkg.photo.alt} class="h-full w-full object-cover" loading="eager" onerror="this.remove()" />
