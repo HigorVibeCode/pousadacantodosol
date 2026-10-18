@@ -1,0 +1,89 @@
+---
+/**
+ * Prado em três cenas: baleias, praias e falésias, festas.
+ * Cada cena tem camadas em SVG movidas por rolagem (--p de 0 a 1) e um ícone que ganha vida ao entrar na tela.
+ */
+const cenas = [
+  { id: 'baleias', eyebrow: 'Julho a novembro', title: 'As jubartes passam em frente a Prado', text: 'A Costa das Baleias é um dos melhores lugares do Brasil para ver baleias de perto. O barco sai do cais do centro; a pousada marca o passeio e adianta o café.', href: '/pacotes/temporada-das-baleias', cta: 'Pacote das baleias' },
+  { id: 'praias', eyebrow: 'O ano todo', title: 'Mar calmo em frente, falésias coloridas ao sul', text: 'A Praia Novo Prado fica a 2 minutos a pé. Num bate-volta, Cumuruxatiba e a reserva de Corumbau, na Costa do Descobrimento.', href: '/localizacao#praias', cta: 'Ver as praias' },
+  { id: 'festas', eyebrow: 'As datas que lotam a cidade', title: 'Uma cidade que sabe fazer festa', text: 'Réveillon na praça da igreja, Carnaval de rua, Moto Rock em maio e o Festival Gastronômico em outubro. Para essas datas, a hospedagem vira pacote.', href: '/pacotes#eventos', cta: 'Pacotes de eventos' },
+];
+---
+<section class="container-site" id="prado" data-no-reveal>
+  <div class="mb-8 max-w-2xl" data-reveal>
+    <p class="eyebrow">Por que Prado</p>
+    <h2 class="mt-2 text-3xl font-extrabold md:text-4xl">Três motivos para vir, um lugar para ficar</h2>
+  </div>
+  <div class="grid gap-4">
+    {cenas.map((c, i) => (
+      <article class:list={['cena relative overflow-hidden rounded-[var(--radius-ficha)] text-espuma', `cena-${c.id}`]} data-cena style={`--p:0`}>
+        <div class="cena-arte absolute inset-0" aria-hidden="true">
+          {c.id === 'baleias' && (
+            <>
+              <div class="absolute inset-0 bg-gradient-to-b from-[#9fd6dc] via-[#2c8c99] to-[#0e3b43]"></div>
+              <svg class="sol-cena absolute right-[5%] top-[3%] h-12 w-12 md:right-[12%] md:top-[14%] md:h-24 md:w-24" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#f5a524" opacity=".9"/></svg>
+              <svg class="baleia absolute left-[4%] top-[7%] w-[74%] max-w-[520px] md:left-[5%] md:top-[16%] md:w-[48%]" viewBox="0 0 400 200">
+                <g class="baleia-corpo">
+                  <path fill="#0e3b43" d="M22 112 C58 46 214 34 298 72 C326 84 346 80 374 60 L366 92 L386 118 C348 108 330 112 300 122 C232 152 92 154 22 112 Z"/>
+                  <path fill="#0e3b43" d="M146 126 C170 152 206 162 236 150 C214 140 192 126 162 118 Z"/>
+                  <path fill="#f4f8f6" opacity=".55" d="M30 110 C70 128 150 138 230 128 C150 146 80 140 30 110 Z"/>
+                  <circle cx="60" cy="98" r="3.5" fill="#f4f8f6"/>
+                </g>
+                <g class="spray" fill="#f4f8f6">
+                  <circle cx="70" cy="60" r="4"/><circle cx="92" cy="40" r="3"/><circle cx="56" cy="44" r="2.5"/><circle cx="110" cy="58" r="2"/><circle cx="40" cy="70" r="2.5"/>
+                </g>
+              </svg>
+              <div class="ondas-cena absolute inset-x-0 bottom-0 h-[38%]">
+                <svg class="onda-a" viewBox="0 0 2880 120" preserveAspectRatio="none"><path fill="#0e3b43" opacity=".55" d="M0 50 C240 20 480 80 720 50 S1200 20 1440 50 S1920 80 2160 50 S2640 20 2880 50 V120 H0 Z"/></svg>
+                <svg class="onda-b" viewBox="0 0 2880 120" preserveAspectRatio="none"><path fill="#082a30" d="M0 70 C240 44 480 96 720 70 S1200 44 1440 70 S1920 96 2160 70 S2640 44 2880 70 V120 H0 Z"/></svg>
+              </div>
+            </>
+          )}
+          {c.id === 'praias' && (
+            <>
+              <div class="absolute inset-0 bg-gradient-to-b from-[#bfe3ea] via-[#79c3cd] to-[#2c8c99]"></div>
+              <svg class="sol-cena absolute left-[60%] top-[8%] h-16 w-16 md:h-28 md:w-28" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#f5a524"/></svg>
+              <svg class="falesia falesia-fundo absolute bottom-[50%] left-0 w-[140%] md:bottom-[26%] md:left-[40%] md:w-[90%]" viewBox="0 0 1400 200" preserveAspectRatio="none"><path fill="#d98a5b" d="M0 200 V120 L90 70 L180 110 L300 40 L420 95 L520 60 L640 110 L760 50 L880 100 L1000 70 L1120 120 L1260 60 L1400 110 V200 Z"/></svg>
+              <svg class="falesia falesia-frente absolute bottom-[46%] left-0 w-[160%] md:bottom-[22%] md:left-[46%] md:w-[100%]" viewBox="0 0 1600 200" preserveAspectRatio="none"><path fill="#b5482a" d="M0 200 V140 L120 90 L240 130 L360 70 L500 120 L640 80 L780 135 L900 90 L1040 130 L1180 85 L1320 125 L1460 95 L1600 130 V200 Z"/><path fill="#8f3620" opacity=".6" d="M0 200 V165 L160 140 L330 160 L520 135 L700 160 L900 140 L1100 165 L1300 145 L1600 165 V200 Z"/></svg>
+              <div class="absolute inset-x-0 bottom-0 h-[48%] bg-[#1f7a86] md:h-[24%]"></div>
+              <div class="ondas-cena absolute inset-x-0 bottom-[38%] h-[10%] md:bottom-[12%] md:h-[14%]">
+                <svg class="onda-a" viewBox="0 0 2880 120" preserveAspectRatio="none"><path fill="#f4f8f6" opacity=".35" d="M0 50 C240 20 480 80 720 50 S1200 20 1440 50 S1920 80 2160 50 S2640 20 2880 50 V120 H0 Z"/></svg>
+              </div>
+              <div class="absolute inset-x-0 bottom-0 hidden h-[12%] bg-[#ecdfc3] md:block"></div>
+            </>
+          )}
+          {c.id === 'festas' && (
+            <>
+              <div class="absolute inset-0 bg-gradient-to-b from-[#0b2a33] via-[#0e3b43] to-[#082a30]"></div>
+              <div class="absolute inset-x-0 bottom-0 h-[56%] bg-[#061f25] md:hidden"></div>
+              <svg class="igreja absolute bottom-[56%] left-[8%] h-[36%] md:bottom-0 md:left-[8%] md:h-[72%]" viewBox="0 0 220 260" preserveAspectRatio="xMidYMax meet">
+                <g fill="#f4f8f6" opacity=".92">
+                  <rect x="20" y="90" width="50" height="170"/><path d="M20 90 L45 40 L70 90 Z"/><rect x="43" y="14" width="4" height="30"/><rect x="36" y="22" width="18" height="4"/>
+                  <path d="M70 120 C100 90 150 90 180 120 L180 260 L70 260 Z"/><rect x="123" y="86" width="4" height="26"/><rect x="116" y="94" width="18" height="4"/>
+                </g>
+                <g fill="#1f7a86"><rect x="36" y="110" width="16" height="26" rx="8"/><rect x="92" y="150" width="16" height="26" rx="8"/><rect x="142" y="150" width="16" height="26" rx="8"/><rect x="115" y="200" width="22" height="60" rx="11"/></g>
+              </svg>
+              <svg class="luzes absolute inset-x-0 top-[8%] w-full" viewBox="0 0 1000 160" preserveAspectRatio="none">
+                <path d="M0 20 Q250 120 500 40 T1000 20" fill="none" stroke="#f4f8f6" stroke-opacity=".5" stroke-width="2"/>
+                <g class="bulbos">
+                  {[60,140,220,300,380,460,540,620,700,780,860,940].map((x, i) => <circle cx={x} cy={i % 2 ? 72 + (i % 3) * 8 : 48 + (i % 3) * 10} r="7" fill="#f5a524" style={`--d:${i * 0.35}s`} />)}
+                </g>
+              </svg>
+              <div class="confete absolute inset-0">
+                {Array.from({ length: 14 }).map((_, i) => <span style={`--x:${(i * 71) % 100}%; --d:${(i * 0.9) % 6}s; --t:${7 + (i % 4) * 2}s; background:${['#f5a524', '#f4f8f6', '#b5482a', '#2f6b4e'][i % 4]}`}></span>)}
+              </div>
+            </>
+          )}
+        </div>
+        <div class:list={["relative flex min-h-[560px] flex-col justify-end p-5 md:min-h-[520px] md:p-10", c.id !== 'praias' && 'md:items-end']}>
+          <div class="w-full max-w-xl rounded-2xl bg-mar-fundo/55 p-5 backdrop-blur-sm md:w-[46%] md:min-w-[360px] md:p-6">
+            <p class="eyebrow !text-sol">{c.eyebrow}</p>
+            <h3 class="mt-2 text-2xl font-extrabold md:text-4xl">{c.title}</h3>
+            <p class="mt-3 text-sm text-espuma/85 md:text-base">{c.text}</p>
+            <a href={c.href} class="btn-sol mt-5 !py-2.5 text-sm">{c.cta}</a>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

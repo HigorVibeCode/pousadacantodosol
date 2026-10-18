@@ -11,8 +11,8 @@ export function initMotion() {
 
   // 1. Revelar ao rolar: blocos de seção e itens de grade (escalonados)
   const targets: HTMLElement[] = [];
-  document.querySelectorAll<HTMLElement>('main section:not([data-hero]) > :not(ul):not(ol):not(script)').forEach((el) => targets.push(el));
-  document.querySelectorAll<HTMLElement>('main section:not([data-hero]) ul.grid, main section:not([data-hero]) ol.space-y-3').forEach((list) => {
+  document.querySelectorAll<HTMLElement>('main section:not([data-hero]):not([data-no-reveal]) > :not(ul):not(ol):not(script), [data-no-reveal] [data-reveal]').forEach((el) => targets.push(el));
+  document.querySelectorAll<HTMLElement>('main section:not([data-hero]):not([data-no-reveal]) ul.grid, main section:not([data-hero]):not([data-no-reveal]) ol.space-y-3').forEach((list) => {
     Array.from(list.children).forEach((li, i) => { (li as HTMLElement).style.setProperty('--i', String(Math.min(i, 8))); targets.push(li as HTMLElement); });
   });
   document.querySelectorAll<HTMLElement>('.horizonte').forEach((el) => targets.push(el));
@@ -28,6 +28,22 @@ export function initMotion() {
   // Entrada do herói: ao terminar, remove a animação para não criar contexto de empilhamento
   document.querySelectorAll<HTMLElement>('[data-enter]').forEach((el) => el.addEventListener('animationend', () => el.removeAttribute('data-enter'), { once: true }));
 
+  // Cenas de Prado: entram com .in e recebem o progresso de rolagem em --p (0 = entrando, 1 = saindo)
+  const cenas = Array.from(document.querySelectorAll<HTMLElement>('[data-cena]'));
+  if (cenas.length) {
+    const ioCena = new IntersectionObserver((entries) => { for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); ioCena.unobserve(e.target); } }, { threshold: 0.35 });
+    cenas.forEach((c) => ioCena.observe(c));
+  }
+  const updateCenas = () => {
+    const vh = window.innerHeight;
+    for (const c of cenas) {
+      const r = c.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > vh) continue;
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+      c.style.setProperty('--p', p.toFixed(3));
+    }
+  };
+
   // 2. Paralaxe do fundo do herói e progresso do cabeçalho
   const para = document.querySelector<HTMLElement>('[data-parallax]');
   const factor = para ? parseFloat(para.dataset.parallax || '0.3') : 0;
@@ -42,6 +58,7 @@ export function initMotion() {
         header.classList.toggle('is-scrolled', y > 24);
         header.style.setProperty('--p', String(Math.min(1, y / 600)));
       }
+      updateCenas();
       ticking = false;
     });
   };

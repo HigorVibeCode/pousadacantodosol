@@ -171,3 +171,36 @@ article.group:hover { transform: translateY(-3px); }
 [data-grid] button:not(:disabled):active, .campo-data:active { transform: scale(.96); }
 .campo { transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease; }
 .campo:focus { box-shadow: 0 0 0 4px rgb(31 122 134 / .12); }
+
+/* ---------- Prado em três cenas ---------- */
+.cena { --p: 0; }
+.cena .sol-cena { transform: translateY(calc((1 - var(--p)) * 48px)); transition: transform .1s linear; }
+/* Baleias: salta ao entrar, depois balança devagar */
+.cena-baleias .baleia { transform: translate(-6%, 70%) rotate(-18deg); opacity: 0; }
+.js-motion .cena-baleias.in .baleia { animation: salto 1.8s cubic-bezier(.2,.7,.2,1) forwards, boiar 5s ease-in-out 1.8s infinite; }
+@keyframes salto { from { transform: translate(-6%, 70%) rotate(-18deg); opacity: 0; } 40% { opacity: 1; } to { transform: translate(0, 0) rotate(0); opacity: 1; } }
+@keyframes boiar { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-8px) rotate(-1.5deg); } }
+.cena-baleias .spray circle { opacity: 0; transform-origin: center; }
+.js-motion .cena-baleias.in .spray circle { animation: borrifo 2.2s ease-out .9s infinite; }
+.js-motion .cena-baleias.in .spray circle:nth-child(2) { animation-delay: 1.1s; } .js-motion .cena-baleias.in .spray circle:nth-child(3) { animation-delay: 1.3s; }
+.js-motion .cena-baleias.in .spray circle:nth-child(4) { animation-delay: 1.0s; } .js-motion .cena-baleias.in .spray circle:nth-child(5) { animation-delay: 1.4s; }
+@keyframes borrifo { 0% { opacity: 0; transform: translateY(14px) scale(.6); } 25% { opacity: .9; } 100% { opacity: 0; transform: translateY(-26px) scale(1.2); } }
+/* sem JS ou com movimento reduzido: a baleia fica no lugar */
+html:not(.js-motion) .cena-baleias .baleia { transform: none; opacity: 1; }
+.ondas-cena svg { position: absolute; bottom: 0; left: 0; width: 200%; height: 100%; }
+.js-motion .ondas-cena .onda-a { animation: ondular 18s linear infinite; }
+.js-motion .ondas-cena .onda-b { animation: ondular 26s linear infinite reverse; }
+/* Praias: falésias em camadas com paralaxe pela rolagem */
+.cena-praias .falesia { transition: transform .1s linear; }
+.cena-praias .falesia-fundo { transform: translateX(calc(var(--p) * -60px)); }
+.cena-praias .falesia-frente { transform: translateX(calc(var(--p) * -140px)); }
+/* Festas: luzes balançam e piscam, confetes caem devagar */
+.cena-festas .luzes { transform-origin: 50% 0; }
+.js-motion .cena-festas .luzes { animation: balancar 6s ease-in-out infinite; }
+@keyframes balancar { 0%, 100% { transform: rotate(-.8deg); } 50% { transform: rotate(.8deg); } }
+.cena-festas .bulbos circle { filter: drop-shadow(0 0 6px #f5a524); }
+.js-motion .cena-festas.in .bulbos circle { animation: piscar 2.4s ease-in-out infinite; animation-delay: var(--d); }
+@keyframes piscar { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+.cena-festas .confete span { position: absolute; top: -8px; left: var(--x); width: 6px; height: 10px; border-radius: 2px; opacity: 0; }
+.js-motion .cena-festas.in .confete span { animation: cair var(--t) linear var(--d) infinite; }
+@keyframes cair { 0% { transform: translateY(0) rotate(0); opacity: 0; } 10% { opacity: .9; } 100% { transform: translateY(560px) rotate(540deg); opacity: 0; } }
