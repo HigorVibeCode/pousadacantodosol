@@ -144,6 +144,14 @@ body.picker-open::after { content: ""; position: fixed; inset: 0; z-index: 55; b
 /* Herói: entrada escalonada do texto e do formulário */
 @keyframes entrar { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 .js-motion [data-enter] { animation: entrar .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i, 0) * 110ms + 80ms); }
+/* Abertura: a foto assenta como uma câmera que para, as ondas sobem, o sol do logo nasce */
+@keyframes assentar { from { transform: scale(1.07); } to { transform: scale(1); } }
+.js-motion .heroi-foto { animation: assentar 2.6s cubic-bezier(.2,.6,.2,1) both; transform-origin: 50% 60%; }
+@keyframes subir-ondas { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.js-motion [data-hero] .ondas { animation: subir-ondas 1s cubic-bezier(.2,.7,.2,1) .35s both; }
+.js-motion [data-hero] .nado { animation: subir-ondas 1s cubic-bezier(.2,.7,.2,1) .45s both; }
+@keyframes nascer-sol { from { transform: translate(-50%, 9px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+.js-motion .logo-sol.nascer { animation: nascer-sol 1.3s cubic-bezier(.2,.7,.2,1) .25s both; }
 [data-parallax] { will-change: transform; }
 
 /* Ondas na base do herói */
@@ -156,7 +164,7 @@ body.picker-open::after { content: ""; position: fixed; inset: 0; z-index: 55; b
 /* Toques discretos de Prado espalhados pela página */
 .nado { position: absolute; left: 0; right: 0; bottom: 34px; height: 44px; overflow: hidden; pointer-events: none; }
 .nado .baleia-mini { position: absolute; bottom: 0; left: -120px; width: 96px; opacity: .42; }
-.js-motion .nado .baleia-mini { animation: nadar 80s linear 6s infinite; }
+.js-motion .nado .baleia-mini { animation: nadar 80s linear 1.6s infinite; }
 .js-motion .nado .baleia-mini .spray circle { animation: borrifo 2.6s ease-out infinite; transform-origin: center; }
 .js-motion .nado .baleia-mini .spray circle:nth-child(2) { animation-delay: .25s; } .js-motion .nado .baleia-mini .spray circle:nth-child(3) { animation-delay: .45s; }
 html:not(.js-motion) .nado .baleia-mini { left: 8%; }

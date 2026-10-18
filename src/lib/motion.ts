@@ -25,6 +25,10 @@ export function initMotion() {
   const revealRest = () => { if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 60) targets.forEach((el) => el.classList.add('in')); };
   window.addEventListener('scroll', revealRest, { passive: true });
 
+  // Abertura: o sol do logo nasce uma vez por visita (não a cada página)
+  try {
+    if (!sessionStorage.getItem('orla-sol')) { document.querySelector('.logo-sol')?.classList.add('nascer'); sessionStorage.setItem('orla-sol', '1'); }
+  } catch { /* armazenamento bloqueado: sem animação */ }
   // Entrada do herói: ao terminar, remove a animação para não criar contexto de empilhamento
   document.querySelectorAll<HTMLElement>('[data-enter]').forEach((el) => el.addEventListener('animationend', () => el.removeAttribute('data-enter'), { once: true }));
 

@@ -10,7 +10,7 @@ const hasPhoto = fs.existsSync('public/images/hero.jpg');
   <!-- Foto do herói: trocar o placeholder por /images/hero.jpg (piscina com a praia ao fundo, 1920x1080) -->
   <div class="absolute inset-0 overflow-hidden" aria-hidden="true">
   <div class="absolute inset-x-0 -top-[35%] -bottom-[10%] foto-placeholder" data-parallax="0.3">
-    {hasPhoto && <img src="/images/hero.jpg" alt="Piscina da Pousada Orla do Sol com o mural das baleias" class="h-full w-full object-cover object-[45%_55%]" loading="eager" fetchpriority="high" />}
+    {hasPhoto && <img src="/images/hero.jpg" alt="Piscina da Pousada Orla do Sol com o mural das baleias" class="heroi-foto h-full w-full object-cover object-[45%_55%]" loading="eager" fetchpriority="high" />}
     <div class:list={['absolute inset-0 bg-gradient-to-t from-mar-fundo to-transparent', hasPhoto ? 'via-mar-fundo/70' : 'via-mar-fundo/50']}></div>
     {!hasPhoto && (
       <>
