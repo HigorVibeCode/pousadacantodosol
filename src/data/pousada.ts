@@ -6,9 +6,9 @@
 export const pousada = {
   name: 'Pousada Orla do Sol',
   shortName: 'Orla do Sol',
-  tagline: 'Pousada em Prado a 2 minutos a pé da Praia Novo Prado',
+  tagline: 'Pousada em Prado a 1 minuto a pé da Praia Novo Prado',
   description:
-    'Pousada familiar em Prado, Bahia, a 2 minutos a pé da Praia Novo Prado. 18 apartamentos com ar-condicionado, com ou sem varanda, piscina, café da manhã incluso e estacionamento gratuito.',
+    'Pousada familiar em Prado, Bahia, a 1 minuto a pé da Praia Novo Prado. 18 apartamentos com ar-condicionado, com ou sem varanda, piscina, café da manhã incluso e estacionamento gratuito.',
   roomsTotal: 18,
   checkIn: '15:00',
   checkOut: '11:00',
@@ -29,7 +29,7 @@ export const pousada = {
   geo: { lat: -17.3298, lng: -39.2143 },
   mapsQuery: 'Pousada Orla do Sol, Rua Moisés Santos Almeida, 4, Prado - BA',
   distances: [
-    { label: 'Praia Novo Prado', value: '2 min a pé' },
+    { label: 'Praia Novo Prado', value: '1 min a pé' },
     { label: 'Centro histórico', value: '12 min a pé' },
     { label: 'Praia do Centro', value: '12 min a pé' },
     { label: 'Aeroporto de Porto Seguro', value: '2h30 de carro' },

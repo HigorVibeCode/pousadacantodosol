@@ -67,6 +67,7 @@ Os redirecionamentos 301 das URLs dos sites antigos estão em `vercel.json` (pro
 - [ ] Confirmar coordenadas (`geo`) e nota/total do Google no dia da publicação
 - [ ] Política de cancelamento, crianças e pets em `src/data/faq.ts`
 - [ ] Preços dos parceiros e datas dos eventos de 2027 em `src/data/packages.ts` e `src/data/extras.ts`
+- [ ] Parcerias de barco e restaurantes estão pausadas: nenhum pacote as inclui. Ao retomar, reincluir nos pacotes e em `src/data/extras.ts`
 - [ ] Fotos dos pacotes em `public/images/pacotes/`
 - [ ] `PUBLIC_GTM_ID` configurado com GA4 e conversão do Google Ads no evento `reserva_clique`
 - [ ] Enviar sitemap no Search Console

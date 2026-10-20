@@ -4,6 +4,7 @@
  * Todo pacote inclui o transfer urbano da pousada: uma saída de manhã (9h) e uma à noite (19h).
  *
  * TODO: todos os valores de parceiros são ESTIMATIVAS até a lista oficial chegar.
+ * Parcerias de barco e restaurantes estão PAUSADAS: nenhum pacote inclui passeio de barco nem refeição em restaurante.
  * TODO: confirmar datas dos eventos de 2027 (Carnaval, Moto Rock, Festival).
  */
 import type { RoomType } from './pricing';
@@ -63,11 +64,11 @@ export const packages: Package[] = [
     tagline: 'Chegue na sexta, volte no domingo sem ter decidido nada além de onde sentar na areia.',
     audience: 'casais', group: 'casais', featured: true,
     nights: [2, 3], startDays: [4, 5], windows: [], fixedDates: [],
-    rooms: ['com-varanda'], lodgingDiscount: 0.10, perPerson: 210, perChild6: 0, perReservation: 120, capacity: 6,
-    includes: [...BASE, ...ROMANTIC, 'Um jantar ou almoço na beira da praia (restaurante parceiro)', 'Passeio de barco no fim de tarde', 'Saída até as 14h no último dia'],
+    rooms: ['com-varanda'], lodgingDiscount: 0.10, perPerson: 0, perChild6: 0, perReservation: 120, capacity: 6,
+    includes: [...BASE, ...ROMANTIC, 'Indicação de restaurantes e do melhor ponto para o pôr do sol', 'Saída até as 14h no último dia'],
     itinerary: [
-      { day: 'Sexta', title: 'Chegada e espumante', text: 'Check-in a partir das 15h, espumante na varanda e fim de tarde na praia a dois minutos.' },
-      { day: 'Sábado', title: 'Praia, barco e jantar', text: 'Café no quarto com frutas da região. Dia de praia. Passeio de barco no fim de tarde e jantar na beira-mar.' },
+      { day: 'Sexta', title: 'Chegada e espumante', text: 'Check-in a partir das 15h, espumante na varanda e fim de tarde na praia a um minuto.' },
+      { day: 'Sábado', title: 'Praia e pôr do sol', text: 'Café no quarto com frutas da região. Dia de praia, pôr do sol e o transfer das 19h para jantar no centro.' },
       { day: 'Domingo', title: 'Sem pressa', text: 'Café até as 10h, piscina, e saída até as 14h.' },
     ],
     photo: { src: '/images/pacotes/fim-de-semana-a-dois.jpg', alt: 'Quarto com varanda e rede' },
@@ -93,18 +94,18 @@ export const packages: Package[] = [
   {
     slug: 'semana-em-familia',
     name: 'Semana em família',
-    tagline: 'Sete noites com os passeios já marcados e as crianças até 6 anos sem custo de cama.',
+    tagline: 'Sete noites com o roteiro pronto, transfer todos os dias e as crianças até 6 anos sem custo de cama.',
     audience: 'familia', group: 'familia', featured: true,
     nights: [7], startDays: [], windows: [FERIAS_JAN, FERIAS_JUL, BAIXA], fixedDates: [],
-    rooms: ['com-varanda', 'normal'], lodgingDiscount: 0.15, perPerson: 460, perChild6: 150, perReservation: 0, capacity: 6, child6BedFree: true,
-    includes: [...BASE, 'Dois almoços na beira da praia (restaurante parceiro)', 'Passeio 4x4 a Cumuruxatiba e Corumbau', 'Passeio de barco pelo rio e manguezal', 'Um dia no centro histórico com transfer ida e volta', 'Criança até 6 anos sem custo de cama extra'],
+    rooms: ['com-varanda', 'normal'], lodgingDiscount: 0.15, perPerson: 180, perChild6: 60, perReservation: 0, capacity: 6, child6BedFree: true,
+    includes: [...BASE, 'Passeio 4x4 a Cumuruxatiba e Corumbau', 'Um dia no centro histórico com transfer ida e volta', 'Roteiro da semana montado pela pousada', 'Criança até 6 anos sem custo de cama extra'],
     itinerary: [
       { day: 'Dia 1', title: 'Chegada', text: 'Check-in, piscina e praia em frente.' },
-      { day: 'Dia 2', title: 'Praia Novo Prado', text: 'Dia de praia com almoço na barraca parceira.' },
+      { day: 'Dia 2', title: 'Praia Novo Prado', text: 'Dia de praia em frente à pousada, a um minuto a pé.' },
       { day: 'Dia 3', title: 'Cumuruxatiba e Corumbau', text: 'Passeio 4x4 pelas falésias coloridas e pela reserva de Corumbau.' },
-      { day: 'Dia 4', title: 'Barco no rio', text: 'Passeio de barco pelo Jucuruçu e manguezal.' },
-      { day: 'Dia 5', title: 'Centro histórico', text: 'Transfer para o centro, casario colonial e almoço na beira do rio.' },
-      { day: 'Dias 6 e 7', title: 'Livres', text: 'Praia, piscina e o segundo almoço na beira-mar no dia que preferirem.' },
+      { day: 'Dia 4', title: 'Piscina e praia', text: 'Dia de descanso depois do passeio, entre a piscina e o mar.' },
+      { day: 'Dia 5', title: 'Centro histórico', text: 'Transfer para o centro, casario colonial e a orla do rio Jucuruçu.' },
+      { day: 'Dias 6 e 7', title: 'Livres', text: 'Praia, piscina e o transfer da noite para conhecer a cidade.' },
     ],
     photo: { src: '/images/pacotes/semana-em-familia.jpg', alt: 'Piscina da pousada com o mural das baleias' },
     seasonLabel: 'Férias de janeiro e julho, e baixa temporada',
@@ -115,12 +116,12 @@ export const packages: Package[] = [
     tagline: 'Três ou quatro noites na época em que as jubartes passam em frente a Prado.',
     audience: 'todos', group: 'eventos', featured: true,
     nights: [3, 4], startDays: [], windows: [BALEIAS, BALEIAS_27], fixedDates: [],
-    rooms: ['com-varanda', 'normal'], lodgingDiscount: 0.10, perPerson: 380, perChild6: 120, perReservation: 0, capacity: 8,
-    includes: [...BASE, 'Passeio de barco para observação de baleias com operador autorizado', 'Um almoço na beira da praia', 'Roteiro das falésias com transfer', 'Café mais cedo no dia do passeio'],
+    rooms: ['com-varanda', 'normal'], lodgingDiscount: 0.10, perPerson: 90, perChild6: 30, perReservation: 0, capacity: 8,
+    includes: [...BASE, 'Roteiro das falésias com transfer', 'Café mais cedo e transfer ao cais no dia do passeio', 'Indicação de operadores autorizados de observação de baleias (passeio de barco pago à parte)'],
     itinerary: [
       { day: 'Dia 1', title: 'Chegada', text: 'Check-in e briefing sobre o passeio: horário, mar e o que levar.' },
-      { day: 'Dia 2', title: 'Baleias', text: 'Café cedo, saída do cais e meio período no mar com as jubartes.' },
-      { day: 'Dia 3', title: 'Falésias', text: 'Transfer para as falésias ao sul e almoço na praia.' },
+      { day: 'Dia 2', title: 'Baleias', text: 'Café cedo e transfer até o cais. O passeio de barco é contratado à parte, com o operador que a pousada indicar.' },
+      { day: 'Dia 3', title: 'Falésias', text: 'Transfer para as falésias ao sul e tarde livre na praia.' },
       { day: 'Dia 4', title: 'Opcional', text: 'Dia livre de praia para quem escolheu quatro noites.' },
     ],
     photo: { src: '/images/pacotes/temporada-das-baleias.jpg', alt: 'Baleia-jubarte saltando no mar de Prado' },
@@ -129,13 +130,13 @@ export const packages: Package[] = [
   {
     slug: 'festival-gastronomico',
     name: 'Festival Gastronômico',
-    tagline: 'Duas ou três noites em outubro com jantar no festival e transfer para o centro todas as noites.',
+    tagline: 'Duas ou três noites em outubro com transfer para o festival todas as noites e volta garantida.',
     audience: 'todos', group: 'eventos',
     nights: [2, 3], startDays: [], windows: [FESTIVAL], fixedDates: [],
-    rooms: ['com-varanda', 'normal'], lodgingDiscount: 0.10, perPerson: 170, perChild6: 60, perReservation: 0, capacity: 8,
-    includes: [...BASE, 'Um jantar em restaurante participante do festival', 'Transfer noturno ao centro durante o festival', 'Guia dos restaurantes e das apresentações'],
+    rooms: ['com-varanda', 'normal'], lodgingDiscount: 0.10, perPerson: 40, perChild6: 0, perReservation: 0, capacity: 8,
+    includes: [...BASE, 'Transfer noturno ao centro durante o festival, com volta', 'Guia dos restaurantes e das apresentações'],
     itinerary: [
-      { day: 'Noite 1', title: 'Festival', text: 'Transfer às 19h para o centro e jantar no restaurante parceiro.' },
+      { day: 'Noite 1', title: 'Festival', text: 'Transfer às 19h para o centro. Jantar por sua conta, no restaurante que escolher.' },
       { day: 'Dia 2', title: 'Praia e festival', text: 'Dia de praia e a programação da noite por conta própria, com o transfer.' },
     ],
     photo: { src: '/images/pacotes/festival-gastronomico.jpg', alt: 'Rua de restaurantes no centro histórico de Prado ao anoitecer' },
@@ -151,8 +152,8 @@ export const packages: Package[] = [
       { checkin: '2026-12-28', checkout: '2027-01-02', label: '5 noites · 28/12 a 02/01' },
       { checkin: '2026-12-29', checkout: '2027-01-02', label: '4 noites · 29/12 a 02/01' },
     ],
-    rooms: ['com-varanda', 'normal'], lodgingDiscount: 0, perPerson: 90, perChild6: 30, perReservation: 120, capacity: 18,
-    includes: [...BASE, 'Espumante para a virada', 'Transfer para a festa na praia e volta de madrugada', 'Café da manhã até as 12h no dia 1º', 'Um almoço na beira da praia'],
+    rooms: ['com-varanda', 'normal'], lodgingDiscount: 0, perPerson: 50, perChild6: 20, perReservation: 120, capacity: 18,
+    includes: [...BASE, 'Espumante para a virada', 'Transfer para a festa na praia e volta de madrugada', 'Café da manhã até as 12h no dia 1º'],
     itinerary: [
       { day: '31/12', title: 'Virada', text: 'Transfer para a orla às 21h, espumante, fogos, e volta de madrugada.' },
       { day: '01/01', title: 'Café tardio', text: 'Café servido até o meio-dia e praia à tarde.' },
@@ -163,7 +164,7 @@ export const packages: Package[] = [
   {
     slug: 'carnaval',
     name: 'Carnaval em Prado',
-    tagline: 'Carnaval de rua pequeno e seguro, a dois minutos da praia e com transfer noturno.',
+    tagline: 'Carnaval de rua pequeno e seguro, a um minuto da praia e com transfer noturno.',
     audience: 'amigos', group: 'eventos',
     nights: [4, 5], startDays: [],
     windows: [], fixedDates: [
@@ -196,7 +197,7 @@ export const packages: Package[] = [
   {
     slug: 'feriado-prolongado',
     name: 'Feriado prolongado',
-    tagline: 'Três ou quatro noites nos feriados de 2027 com almoço na praia e passeio de barco.',
+    tagline: 'Três ou quatro noites nos feriados de 2027, com transfer todos os dias e saída tardia.',
     audience: 'todos', group: 'eventos',
     nights: [3, 4], startDays: [],
     windows: [
@@ -209,9 +210,9 @@ export const packages: Package[] = [
       { start: '2027-10-29', end: '2027-11-02', label: 'Finados' },
       { start: '2027-11-12', end: '2027-11-15', label: 'Proclamação da República' },
     ], fixedDates: [],
-    rooms: ['com-varanda', 'normal'], lodgingDiscount: 0.10, perPerson: 170, perChild6: 60, perReservation: 0, capacity: 8,
-    includes: [...BASE, 'Um almoço na beira da praia', 'Passeio de barco pelo rio e manguezal'],
-    itinerary: [{ day: 'Feriado', title: 'Praia e barco', text: 'Almoço na barraca parceira e passeio de barco no dia que preferir.' }],
+    rooms: ['com-varanda', 'normal'], lodgingDiscount: 0.10, perPerson: 20, perChild6: 0, perReservation: 0, capacity: 8,
+    includes: [...BASE, 'Guia de praias e do centro histórico preparado pela pousada', 'Saída até as 14h no último dia'],
+    itinerary: [{ day: 'Feriado', title: 'Praia e cidade', text: 'Praia em frente durante o dia e o transfer das 19h para o centro à noite.' }],
     photo: { src: '/images/pacotes/feriado-prolongado.jpg', alt: 'Festa na praça da igreja de Prado' },
     seasonLabel: 'Feriados de 2027',
   },

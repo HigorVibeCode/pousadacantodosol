@@ -94,7 +94,7 @@ export async function mountReservar(app: HTMLElement) {
             </li>`).join('')}
         </ul>
         ${ok.length === 0 ? `<div class="mt-6 rounded-[var(--radius-ficha)] bg-areia-clara p-6"><p class="font-bold">Nada disponível para essa combinação.</p><p class="mt-1 text-sm text-mar/80">${pkg ? 'Confira as regras de datas do pacote ou fale com a gente.' : 'Tente outras datas, ou fale com a gente: às vezes conseguimos montar uma opção com dois apartamentos.'}</p><a href="${waAlt}" class="btn-mar mt-4 text-sm" data-origem="sem-vaga">Pedir ajuda no WhatsApp</a></div>` : ''}
-        <p class="mt-6 text-xs text-neblina">Valores em reais, por apartamento, com café da manhã. Sem taxa de serviço. ${pkg ? 'Valores de passeios e parceiros estimados; a pousada confirma no WhatsApp.' : `Cama extra: ${brl(pricingExtras.child6)} por noite até 6 anos, ${brl(pricingExtras.person)} acima disso.`}</p>
+        <p class="mt-6 text-xs text-neblina">Valores em reais, por apartamento, com café da manhã. Sem taxa de serviço. ${pkg ? 'Valores estimados; a pousada confirma no WhatsApp.' : `Cama extra: ${brl(pricingExtras.child6)} por noite até 6 anos, ${brl(pricingExtras.person)} acima disso.`}</p>
       </div>`;
     return;
   }
@@ -119,7 +119,7 @@ export async function mountReservar(app: HTMLElement) {
         <div class="flex justify-between"><dt class="text-neblina">Hospedagem (${r.nightsCount} noites)</dt><dd>${brl(r.pkg.lodging)}</dd></div>
         ${r.pkg.discount ? `<div class="flex justify-between text-palmeira"><dt>Desconto do pacote</dt><dd>− ${brl(r.pkg.discount)}</dd></div>` : ''}
         ${r.pkg.child6Free ? `<div class="flex justify-between text-palmeira"><dt>Cama extra até 6 anos</dt><dd>grátis</dd></div>` : ''}
-        <div class="flex justify-between"><dt class="text-neblina">Passeios e parceiros</dt><dd>${brl(r.pkg.extras)}</dd></div>
+        <div class="flex justify-between"><dt class="text-neblina">Extras do pacote</dt><dd>${brl(r.pkg.extras)}</dd></div>
         ${r.pkg.perReservation ? `<div class="flex justify-between"><dt class="text-neblina">Mimos no quarto</dt><dd>${brl(r.pkg.perReservation)}</dd></div>` : ''}
       </dl>` : `<details class="mt-4 text-sm"><summary class="flex items-center justify-between font-semibold">${r.nightsCount} ${r.nightsCount === 1 ? 'noite' : 'noites'} <span class="text-mar-claro text-xs">ver por dia</span></summary>
         <ul class="mt-2 space-y-1 text-neblina">${r.nights.map((x: any) => `<li class="flex justify-between"><span>${fmtDate(x.date)}</span><span>${brl(x.price)}${x.extra || x.surcharge ? `<span class="text-[11px]"> (${brl(x.base)}${x.extra ? ` + ${brl(x.extra)} extra` : ''}${x.surcharge ? ` + ${brl(x.surcharge)}` : ''})</span>` : ''}</span></li>`).join('')}</ul>

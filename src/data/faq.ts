@@ -7,7 +7,7 @@ export const faq: Faq[] = [
   },
   {
     q: 'A que distância fica a praia?',
-    a: 'A Praia Novo Prado fica a cerca de 2 minutos a pé. O centro histórico de Prado fica a 12 minutos caminhando.',
+    a: 'A Praia Novo Prado fica a 1 minuto a pé. O centro histórico de Prado fica a 12 minutos caminhando.',
   },
   {
     q: 'O café da manhã está incluso?',
